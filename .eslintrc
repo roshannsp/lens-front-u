@@ -1,0 +1,68 @@
+{
+  "extends": ["airbnb", "prettier", "prettier/react"],
+  "rules": {
+    "curly": "warn",
+    "semi": 0,
+    "comma-dangle": 0,
+    "arrow-parens": 0,
+    "no-console": "off",
+    "strict": ["error", "global"],
+    "class-methods-use-this": 0,
+    "max-len": 0,
+    "no-plusplus": 0,
+    "no-tabs": 0,
+    "no-unused-vars": 2,
+    "object-curly-newline": 0,
+    "no-param-reassign": 0,
+    "no-mixed-spaces-and-tabs": 0,
+    "no-return-assign": 0,
+    "no-underscore-dangle": 0,
+    "no-mixed-operators": 0,
+    "no-useless-constructor": 2,
+    "import/no-named-as-default": 0,
+    "lines-between-class-members": 0,
+    "jsx-a11y/label-has-for": 0,
+    "jsx-a11y/anchor-is-valid": 0,
+    "jsx-a11y/label-has-associated-control": 0,
+    "jsx-a11y/click-events-have-key-events": 0,
+    "jsx-a11y/no-static-element-interactions": 0,
+    "jsx-a11y/mouse-events-have-key-events": 0,
+    "jsx-a11y/no-noninteractive-element-interactions": 0,
+    "jsx-a11y/no-noninteractive-element-to-interactive-role": 0,
+    "react/jsx-no-bind": 1,
+    "react/jsx-filename-extension": [
+      2,
+      {
+        "extensions": [".js"]
+      }
+    ],
+    "react/sort-comp": 0,
+    "react/jsx-closing-bracket-location": 0,
+    "react/forbid-prop-types": 0,
+    "react/require-default-props": 0,
+    "react/destructuring-assignment": 0,
+    "react/prefer-stateless-function": 0
+  },
+  "plugins": ["react"],
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "node": true,
+    "es6": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true,
+      "legacyDecorators": true,
+      "decoratorsBeforeExport": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "globals": {
+    "PhoneJs": true
+  }
+}

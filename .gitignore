@@ -1,0 +1,11 @@
+dist/
+
+# Firebase cache
+.firebase/
+
+node_modules
+
+.env*
+
+package-lock.json
+yarn.lock

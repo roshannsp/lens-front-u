@@ -1,0 +1,20 @@
+// 1. Import the initial variables
+@import '../../node_modules/bulma/sass/utilities/initial-variables';
+
+@import url('https://fonts.googleapis.com/css?family=Bai+Jamjuree');
+
+// 2. Override styles
+$family-sans-serif: 'Bai Jamjuree', sans-serif;
+$pink: #f2acc7;
+$dark: hsl(0, 0%, 21%);
+$primary: $dark;
+$secondary: $pink;
+$navbar-background-color: $dark;
+
+// 3. Import the rest of Bulma
+@import '../../node_modules/bulma/bulma';
+
+body {
+  background-color: $grey-dark;
+  color: white;
+}
