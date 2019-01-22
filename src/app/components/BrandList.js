@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { storage } from '../lib/firebase'
 import { observer, inject } from 'mobx-react'
 import { Promise } from 'core-js'
+import Link from 'next/link'
 
 @inject('store')
 @observer
@@ -28,7 +29,7 @@ export default class BrandList extends Component {
   }
 
   componentWillUnmount() {
-    if (this._asyncRequest) {
+    if (this._asyncRequest && typeof this._asyncRequest.cancel === 'function') {
       this._asyncRequest.cancel()
     }
   }
@@ -52,6 +53,10 @@ export default class BrandList extends Component {
   render() {
     const brands = this.props.store.brand.brands
     const brandImageUrls = this.state.brandImageUrls
-    return <div className="columns">{this.renderBrands(brandImageUrls)}</div>
+    return (
+      <Link href="/products">
+        <div className="columns">{this.renderBrands(brandImageUrls)}</div>
+      </Link>
+    )
   }
 }

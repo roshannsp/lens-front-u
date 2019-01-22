@@ -10,7 +10,7 @@ class Footer extends Component {
       <section>
         <div className="container">
           <div className="columns">
-            <div class="column">
+            <div className="column">
               <p>โปรโมชั่น</p>
               <br />
               <ul>
@@ -24,13 +24,11 @@ class Footer extends Component {
                 height="214"
                 style={{ border: 'none', overflow: 'hidden', margin: '1rem' }}
                 scrolling="no"
-                frameborder="0"
-                allowTransparency="true"
                 allow="encrypted-media"
               />
             </div>
-            <div class="column">Line Contact</div>
-            <div class="column">
+            <div className="column">Line Contact</div>
+            <div className="column">
               <h3>ติดต่อร้าน LENSFRONTU</h3>
               <p>
                 <span>ร้าน Lensfrontu</span>
