@@ -28,6 +28,7 @@
     "firebase": "^5.7.3",
     "firebase-admin": "^6.3.0",
     "firebase-functions": "^2.1.0",
+    "lodash": "^4.17.11",
     "mobx": "^5.8.0",
     "mobx-react": "^5.4.3",
     "next": "^7.0.0",

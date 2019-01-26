@@ -21,7 +21,25 @@ export default class Brand {
     }
   }
 
-  test = () => {
-    return 'test'
+  @action
+  set = async brands => {
+    try {
+      runInAction(() => {
+        this.brands = brands
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  @action
+  setProducts = async (brand, products) => {
+    try {
+      runInAction(() => {
+        this.brands[brand].products = products
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
 }

@@ -37,7 +37,7 @@ class Footer extends Component {
                 <span>
                   จันทร์-เสาร์ 11.30-22.00น.
                   <br />
-                  <span style={{ 'text-decoration': 'underline' }}>
+                  <span style={{ textDecoration: 'underline' }}>
                     หยุดวันอาทิตย์
                   </span>
                 </span>

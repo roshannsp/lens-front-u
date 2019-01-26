@@ -4,7 +4,7 @@ import store from '../stores'
 import 'babel-polyfill'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import Products from '../components/products/Products'
+import Product from '../components/product/Product'
 import '../../public/style.scss'
 
 export default () => (
@@ -12,7 +12,7 @@ export default () => (
     <main>
       <Header />
       <div className="container" style={{ paddingTop: 2 + 'rem' }}>
-        <Products />
+        <Product />
       </div>
       <Footer />
     </main>

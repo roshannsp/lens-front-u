@@ -4,6 +4,7 @@ import Footer from './Footer'
 import { inject, observer } from 'mobx-react'
 import PropTypes from 'prop-types'
 import BrandList from './BrandList'
+import 'lodash'
 
 @inject('store')
 @observer
@@ -14,7 +15,14 @@ class App extends Component {
   }
 
   componentDidMount = async () => {
-    await this.store.brand.get()
+    this.mounted = true
+    if (_.isEmpty(this.store.brand.brands)) {
+      await this.store.brand.get()
+    }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false
   }
 
   render() {

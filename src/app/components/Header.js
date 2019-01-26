@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
-import './Header.scss'
 
 class Header extends Component {
   constructor(props) {
@@ -31,14 +30,29 @@ class Header extends Component {
         </Head>
         <nav className="navbar is-primary">
           <div className="navbar-brand container">
-            <span className="navbar-item nowrap has-text-pink">
+            <span
+              className="navbar-item has-text-pink"
+              style={{
+                whiteSpace: 'nowrap',
+                fontSize: '13px',
+                overflow: 'hidden'
+              }}
+            >
               ร้านให้เช่าเลนส์ เช่ากล้อง DSLR · Mirrorless · GoPro ชั้น 12
               อาคารเอเชีย (ตึกจอดรถโรงแรมเอเชีย) ติด BTS ราชเทวี
               กรุงเทพ|lenslineuprental@gmail.com
             </span>
           </div>
         </nav>
-        <div className="logo-bar is-flex">
+        <div
+          className="is-flex"
+          style={{
+            justifyContent: 'center',
+            width: 'auto',
+            backgroundColor: 'black',
+            alignItems: 'center'
+          }}
+        >
           <img src="https://firebasestorage.googleapis.com/v0/b/lens-front-u-dev.appspot.com/o/images%2Flens-front-u-logo.jpg?alt=media" />
         </div>
         <nav className="navbar is-primary">
@@ -54,10 +68,18 @@ class Header extends Component {
           </div>
           <div className={isActive('navbar-menu')}>
             <div className="navbar-start container">
-              <a className="navbar-item">หน้าแรก</a>
-              <a className="navbar-item">รายการทั้งหมด</a>
-              <a className="navbar-item">ขั้นตอนการเช่า / เงื่อนไข</a>
-              <a className="navbar-item">ติดต่อ</a>
+              <Link href="/">
+                <a className="navbar-item">หน้าแรก</a>
+              </Link>
+              <Link href="/products">
+                <a className="navbar-item">รายการทั้งหมด</a>
+              </Link>
+              <Link href="/instruction">
+                <a className="navbar-item">ขั้นตอนการเช่า / เงื่อนไข</a>
+              </Link>
+              <Link href="/contact">
+                <a className="navbar-item">ติดต่อ</a>
+              </Link>
             </div>
           </div>
         </nav>
