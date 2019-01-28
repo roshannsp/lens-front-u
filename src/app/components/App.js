@@ -39,7 +39,6 @@ class App extends Component {
               Olympus · GoPro · DJI OSMO
             </h1>
           </div>
-          <hr />
         </div>
         <Footer />
       </main>

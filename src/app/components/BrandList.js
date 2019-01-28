@@ -4,6 +4,8 @@ import { observer, inject } from 'mobx-react'
 import { Promise } from 'core-js'
 import Link from 'next/link'
 import 'babel-polyfill'
+import { BeatLoader, HashLoader } from 'react-spinners'
+import ImageLoader from 'react-load-image'
 
 @inject('store')
 @observer
@@ -11,15 +13,17 @@ export default class BrandList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      brands: []
+      brands: [],
+      loading: true
     }
+    this.store = this.props.store
     this.getImage = this.getImage.bind(this)
   }
 
   componentDidMount() {
     const brands = this.props.store.brand.brands
     if (!_.isEmpty(brands) && brands[Object.keys(brands)[0]].thumbnailUrl) {
-      this.setState({ brands })
+      this.setState({ brands, loading: false })
       return false
     } else {
       this.fetchThumbnailUrl()
@@ -29,7 +33,7 @@ export default class BrandList extends Component {
   componentWillReact() {
     const brands = this.props.store.brand.brands
     if (!_.isEmpty(brands) && brands[Object.keys(brands)[0]].thumbnailUrl) {
-      this.setState({ brands })
+      this.setState({ brands, loading: false })
       return false
     } else {
       this.fetchThumbnailUrl()
@@ -50,7 +54,8 @@ export default class BrandList extends Component {
     })
     this.props.store.brand.set(brands)
     this.setState({
-      brands
+      brands,
+      loading: false
     })
   }
 
@@ -70,7 +75,15 @@ export default class BrandList extends Component {
               query: { brand: key }
             }}
           >
-            <img src={brands[key].thumbnailUrl} />
+            <div>
+              <ImageLoader src={brands[key].thumbnailUrl}>
+                <img />
+                <div>Error!</div>
+                <div className="clip-loader">
+                  <HashLoader color={'#f2acc7'} loading={true} />
+                </div>
+              </ImageLoader>
+            </div>
           </Link>
         </div>
       )
@@ -81,9 +94,15 @@ export default class BrandList extends Component {
     const brands = this.props.store.brand.brands
     const brandImageUrls = this.state.brands
     return (
-      <Link href="/products">
+      <div style={{ minHeight: '167.66px' }}>
+        {(this.store.brand.getBrandStatus === 'LOADING' ||
+          this.state.loading) && (
+          <div className="clip-loader">
+            <BeatLoader color={'#f2acc7'} loading={true} />
+          </div>
+        )}
         <div className="columns">{this.renderBrands(brandImageUrls)}</div>
-      </Link>
+      </div>
     )
   }
 }

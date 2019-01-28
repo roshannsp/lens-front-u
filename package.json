@@ -6,6 +6,7 @@
     "node": "8"
   },
   "scripts": {
+    "start": "next \"src/app/\"",
     "dev": "next \"src/app/\"",
     "preserve": "npm run build-public && npm run build-funcs && npm run build-app && npm run copy-deps && npm run install-deps",
     "serve": "NODE_ENV=production firebase serve",
@@ -20,7 +21,12 @@
   },
   "dependencies": {
     "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.3.0",
     "@babel/plugin-proposal-decorators": "^7.2.3",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-react": "^7.0.0",
+    "@zeit/next-css": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",
     "babel-polyfill": "^6.26.0",
     "bulma": "^0.7.2",
@@ -36,14 +42,18 @@
     "prop-types": "^15.6.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
+    "react-load-image": "^0.1.7",
+    "react-slick": "^0.23.2",
+    "react-spinners": "^0.5.1",
     "rfx-core": "^1.6.2",
-    "styled-jsx": "^3.1.3"
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.0",
     "cpx": "^1.5.0",
     "cross-env": "^5.2.0",
     "firebase-tools": "^6.1.0",
-    "rimraf": "^2.6.0"
+    "rimraf": "^2.6.0",
+    "url-loader": "^1.1.2"
   }
 }

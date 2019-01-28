@@ -5,6 +5,8 @@ import { storage } from '../../lib/firebase'
 import Link from 'next/link'
 import { withRouter } from 'next/router'
 import 'lodash'
+import { BeatLoader, HashLoader } from 'react-spinners'
+import ImageLoader from 'react-load-image'
 
 @inject('store')
 @observer
@@ -15,13 +17,13 @@ class Products extends Component {
     this.state = {
       products: [],
       brand: undefined,
-      fetching: false
+      loading: false
     }
   }
 
   componentDidUpdate = async () => {
     const { query } = this.props.router
-    if (this.state.brand !== query.brand && this.state.fetching === false) {
+    if (this.state.brand !== query.brand && this.state.loading === false) {
       this.fetchProducts()
     }
   }
@@ -33,23 +35,31 @@ class Products extends Component {
     this.fetchProducts()
   }
 
-  fetchProducts() {
-    this.setState({ fetching: true })
+  fetchProducts = async () => {
+    this.setState({ loading: true })
     const brands = this.props.store.brand.brands
     const { query } = this.props.router
     if (query && query.brand && !_.isEmpty(brands)) {
-      this.setState({ brand: query.brand })
+      this.setState({ products: [], brand: query.brand })
       const brand = brands[query.brand]
       if (brand.products) {
-        this.getProductImage(query.brand, brand.products)
+        const products = await this.getProductImage(query.brand, brand.products)
+        this.setState({
+          products: this.state.products.concat(products),
+          loading: false
+        })
       } else {
-        this.setState({ fetching: false })
+        this.setState({ loading: false })
       }
     } else {
-      this.setState({ brand: undefined })
-      Object.keys(brands).map(key => {
+      this.setState({ products: [], brand: undefined })
+      Object.keys(brands).map(async key => {
         if (brands[key].products) {
-          this.getProductImage(key, brands[key].products)
+          const products = await this.getProductImage(key, brands[key].products)
+          this.setState({
+            products: this.state.products.concat(products),
+            loading: false
+          })
         }
       })
     }
@@ -67,15 +77,9 @@ class Products extends Component {
   }
 
   async getProductImage(brand, products) {
-    console.log('loaddddd1')
     if (this.isHasImageUrl(products)) {
-      this.setState({
-        products: this.state.products.concat(products),
-        fetching: false
-      })
-      return false
+      return products
     }
-    console.log('loaddddd')
     const productPromises = products.map(async product => {
       const imagePromises = product.images.map(async image => {
         const imageUrl = await this.getImage(brand, image)
@@ -86,11 +90,7 @@ class Products extends Component {
       return product
     })
     const newProducts = await Promise.all(productPromises)
-    this.props.store.brand.setProducts(brand, products)
-    this.setState({
-      products: this.state.products.concat(newProducts),
-      fetching: false
-    })
+    return newProducts
   }
 
   getImage = async (brand, imageName) => {
@@ -101,18 +101,44 @@ class Products extends Component {
 
   renderProducts(products) {
     return products.map((product, index) => (
-      <div key={index} className="column is-one-third">
-        <Link
-          href={{
-            pathname: '/product',
-            query: { brand: product.brand, id: product.id }
-          }}
-        >
-          <div>
-            <img src={product.images[0]} />
-            <p>{product.name}</p>
-          </div>
-        </Link>
+      <div key={index} className="column is-3">
+        <div className="box">
+          <article className="media">
+            <div className="media-content">
+              <div className="content">
+                <Link
+                  href={{
+                    pathname: '/product',
+                    query: { brand: product.brand, id: product.id }
+                  }}
+                >
+                  <div>
+                    <ImageLoader src={product.images[0]}>
+                      <img />
+                      <div>Error!</div>
+                      <div className="products-hash-loader">
+                        <HashLoader color={'#f2acc7'} loading={true} />
+                      </div>
+                    </ImageLoader>
+                    <p
+                      className="has-text-centered"
+                      style={{
+                        height: '48px',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }}
+                    >
+                      {product.name}
+                    </p>
+                    <p className="has-text-centered has-text-danger">
+                      {product.price} บาท/วัน
+                    </p>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </article>
+        </div>
       </div>
     ))
   }
@@ -122,7 +148,15 @@ class Products extends Component {
     const products = this.state.products
     return (
       <main>
-        <div className="columns">{this.renderProducts(products)}</div>
+        {(this.store.brand.getBrandStatus === 'LOADING' ||
+          this.state.loading) && (
+          <div className="products-clip-loader">
+            <BeatLoader color={'#f2acc7'} loading={true} />
+          </div>
+        )}
+        <div className="columns is-multiline">
+          {this.renderProducts(products)}
+        </div>
       </main>
     )
   }

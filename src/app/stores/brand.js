@@ -1,9 +1,12 @@
 import { observable, action, runInAction } from 'mobx'
-import { get } from '../services/brand'
+import { get, getProduct } from '../services/brand'
+import product from '../pages/product'
 
 export default class Brand {
   @observable brands = {}
+  @observable product = {}
   @observable getBrandStatus = ''
+  @observable getProductStatus = ''
 
   @action
   get = async () => {
@@ -40,6 +43,29 @@ export default class Brand {
       })
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  @action
+  getProduct = async (brand, id) => {
+    this.getProductStatus = 'LOADING'
+    try {
+      const data = await getProduct(brand)
+      runInAction(() => {
+        let products = data.val()
+        products = products.filter(product => product.id === id)
+        if (products.length > 0) {
+          this.product = products[0]
+          this.getProductStatus = 'SUCCESS'
+        } else {
+          this.getProductStatus = 'FAILED'
+        }
+      })
+    } catch (error) {
+      console.log(error)
+      runInAction(() => {
+        this.getProductStatus = 'FAILED'
+      })
     }
   }
 }

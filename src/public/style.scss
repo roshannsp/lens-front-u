@@ -13,8 +13,65 @@ $navbar-background-color: $dark;
 
 // 3. Import the rest of Bulma
 @import '../../node_modules/bulma/bulma';
+@import '~slick-carousel/slick/slick.css';
+
+// $slick-font-path: '/node_modules/slick-carousel/slick/fonts/';
+// $slick-loader-path: '/node_modules/slick-carousel/slick/';
+
+@import '~slick-carousel/slick/slick-theme.css';
+// @import '~bulma-calendar/dist/css/bulma-calendar.min.css';
 
 body {
   background-color: $grey-dark;
   color: white;
+}
+
+.bulma-datepicker-container {
+  color: $dark;
+}
+
+.box {
+  background-color: $dark;
+  color: white;
+}
+
+.bar-loader {
+  div {
+    width: auto;
+  }
+}
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.clip-loader {
+  @include flex-center;
+  height: 137.66px;
+}
+.products-clip-loader {
+  @include flex-center;
+  height: 340px;
+}
+
+.products-hash-loader {
+  @include flex-center;
+  height: 188px;
+}
+
+.product-clip-loader {
+  @include flex-center;
+  height: 540px;
+}
+
+.product-hash-loader1 {
+  @include flex-center;
+  height: 396px;
+}
+
+.product-hash-loader2 {
+  @include flex-center;
+  height: 132px;
 }

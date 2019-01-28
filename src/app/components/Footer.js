@@ -9,6 +9,7 @@ class Footer extends Component {
     return (
       <section>
         <div className="container">
+          <hr />
           <div className="columns">
             <div className="column">
               <p>โปรโมชั่น</p>
