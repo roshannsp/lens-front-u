@@ -1,29 +1,34 @@
-// 1. Import the initial variables
 @import '../../node_modules/bulma/sass/utilities/initial-variables';
+@import url('https://fonts.googleapis.com/css?family=Mali');
+@import url('https://use.fontawesome.com/releases/v5.7.0/css/all.css');
 
-@import url('https://fonts.googleapis.com/css?family=Bai+Jamjuree');
-
-// 2. Override styles
-$family-sans-serif: 'Bai Jamjuree', sans-serif;
+$family-sans-serif: 'Mali', sans-serif;
 $pink: #f2acc7;
 $dark: hsl(0, 0%, 21%);
 $primary: $dark;
-$secondary: $pink;
+$info: $pink;
 $navbar-background-color: $dark;
 
-// 3. Import the rest of Bulma
 @import '../../node_modules/bulma/bulma';
 @import '~slick-carousel/slick/slick.css';
-
-// $slick-font-path: '/node_modules/slick-carousel/slick/fonts/';
-// $slick-loader-path: '/node_modules/slick-carousel/slick/';
-
 @import '~slick-carousel/slick/slick-theme.css';
 // @import '~bulma-calendar/dist/css/bulma-calendar.min.css';
 
-body {
-  background-color: $grey-dark;
+@import '~react-mfb/mfb.css';
+
+html {
+  height: 100%;
   color: white;
+  background-color: $grey-dark;
+  body {
+    background-color: $grey-dark;
+    color: white;
+    height: 100%;
+
+    #__next {
+      height: 100%;
+    }
+  }
 }
 
 .bulma-datepicker-container {
@@ -41,10 +46,31 @@ body {
   }
 }
 
+.height-100 {
+  height: 100%;
+}
+
+.height-20 {
+  height: 20%;
+}
+
+.has-text-underline {
+  text-decoration: underline;
+}
+
 @mixin flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: space-between;
+}
+
+.icon-w-text {
+  display: flex;
 }
 
 .clip-loader {
@@ -74,4 +100,15 @@ body {
 .product-hash-loader2 {
   @include flex-center;
   height: 132px;
+}
+
+.card {
+  &.is-disabled {
+    background-color: lightgray;
+  }
+}
+
+.card-content {
+  background-color: transparent;
+  padding: 1rem;
 }

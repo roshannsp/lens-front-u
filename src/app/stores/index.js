@@ -1,6 +1,6 @@
 import 'babel-polyfill'
-import Brand from './brand'
+import Product from './product'
 
 export default {
-  brand: new Brand()
+  product: new Product()
 }

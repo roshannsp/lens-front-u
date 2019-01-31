@@ -29,19 +29,37 @@ class Header extends Component {
           />
         </Head>
         <nav className="navbar is-primary">
-          <div className="navbar-brand container">
-            <span
-              className="navbar-item has-text-pink"
-              style={{
-                whiteSpace: 'nowrap',
-                fontSize: '13px',
-                overflow: 'hidden'
-              }}
+          <div className="navbar-brand">
+            <a
+              className={isActive('navbar-burger burger')}
+              onClick={this.toggleBurger}
             >
-              ร้านให้เช่าเลนส์ เช่ากล้อง DSLR · Mirrorless · GoPro ชั้น 12
-              อาคารเอเชีย (ตึกจอดรถโรงแรมเอเชีย) ติด BTS ราชเทวี
-              กรุงเทพ|lenslineuprental@gmail.com
-            </span>
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+            </a>
+          </div>
+          <div className={isActive('navbar-menu')}>
+            <div className="navbar-start container flex-center">
+              <Link href="/">
+                <a className="navbar-item">หน้าแรก</a>
+              </Link>
+              <Link href="/products">
+                <a className="navbar-item">รายการทั้งหมด</a>
+              </Link>
+              <Link href="/instruction">
+                <a className="navbar-item">ขั้นตอนการเช่า / เงื่อนไข</a>
+              </Link>
+              <Link href="/promotion">
+                <a className="navbar-item">โปรโมชั่น</a>
+              </Link>
+              <Link href="/review">
+                <a className="navbar-item">รีวิว</a>
+              </Link>
+              <Link href="/contact">
+                <a className="navbar-item">ติดต่อ</a>
+              </Link>
+            </div>
           </div>
         </nav>
         <div
@@ -55,34 +73,6 @@ class Header extends Component {
         >
           <img src="https://firebasestorage.googleapis.com/v0/b/lens-front-u-dev.appspot.com/o/images%2Flens-front-u-logo.jpg?alt=media" />
         </div>
-        <nav className="navbar is-primary">
-          <div className="navbar-brand">
-            <a
-              className={isActive('navbar-burger burger')}
-              onClick={this.toggleBurger}
-            >
-              <span aria-hidden="true" />
-              <span aria-hidden="true" />
-              <span aria-hidden="true" />
-            </a>
-          </div>
-          <div className={isActive('navbar-menu')}>
-            <div className="navbar-start container">
-              <Link href="/">
-                <a className="navbar-item">หน้าแรก</a>
-              </Link>
-              <Link href="/products">
-                <a className="navbar-item">รายการทั้งหมด</a>
-              </Link>
-              <Link href="/instruction">
-                <a className="navbar-item">ขั้นตอนการเช่า / เงื่อนไข</a>
-              </Link>
-              <Link href="/contact">
-                <a className="navbar-item">ติดต่อ</a>
-              </Link>
-            </div>
-          </div>
-        </nav>
       </section>
     )
   }

@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 import PropTypes from 'prop-types'
-import { storage } from '../../lib/firebase'
-import Link from 'next/link'
 import { withRouter } from 'next/router'
 import 'lodash'
-// import bulmaCalendar from '../../../../node_modules/bulma-calendar/dist/js/bulma-calendar.min.js'
 import Slider from 'react-slick'
 import { BeatLoader, HashLoader } from 'react-spinners'
 import ImageLoader from 'react-load-image'
+import { getProductImage } from '../../services/product'
 
 @inject('store')
 @observer
@@ -18,26 +16,27 @@ class Product extends Component {
     this.store = this.props.store
     this.state = {
       product: {},
-      nav1: null,
-      nav2: null,
       loading: true
     }
   }
 
-  async getProductImage(brand, product) {
+  async getProductImage() {
+    const { query } = this.props.router
+    const products = this.store.product.products
+    const product = products.find(product => product.id === query.id)
+    if (!product) {
+      this.setState({ loading: false })
+      return false
+    }
     const imagePromises = product.images.map(async image => {
-      const imageUrl = await this.getImage(brand, image)
+      let imageUrl = image
+      if (!imageUrl.includes('firebasestorage')) {
+        imageUrl = await getProductImage(image)
+      }
       return imageUrl
     })
     product.images = await Promise.all(imagePromises)
-    product.brand = brand
     this.setState({ product, loading: false })
-  }
-
-  getImage = async (brand, imageName) => {
-    const storageRef = storage.ref(`images/brands/${brand}/${imageName}`)
-    const imageUrl = await storageRef.getDownloadURL()
-    return imageUrl
   }
 
   renderImages(product, type) {
@@ -61,29 +60,28 @@ class Product extends Component {
   }
 
   componentDidMount = async () => {
-    const { query } = this.props.router
-    await this.store.brand.getProduct(query.brand, query.id)
-    const product = this.props.store.brand.product
-    this.getProductImage(query.brand, product)
-    const options = {
-      isRange: true,
-      dateFormat: 'DD/MM/YYYY',
-      showFooter: false
+    if (_.isEmpty(this.store.product.products)) {
+      await this.store.product.get()
     }
-    // const calendars = bulmaCalendar.attach('[type="date"]', options)
-    this.setState({
-      nav1: this.slider1,
-      nav2: this.slider2
-    })
+    this.getProductImage()
+  }
+
+  onSlideChange(next) {
+    this.slider1.slickGoTo(next)
+    this.slider2.slickGoTo(next)
   }
 
   render() {
-    const brands = this.props.store.brand.brands
+    const forUpdate = this.props.store.product.products
     const product = this.state.product
+    const isLoading =
+      this.store.product.getProductStatus === 'LOADING' || this.state.loading
+    const settings = {
+      beforeChange: (current, next) => this.onSlideChange(next)
+    }
     return (
       <main>
-        {this.store.brand.getProductStatus === 'LOADING' &&
-        this.state.loading ? (
+        {isLoading ? (
           <div className="product-clip-loader">
             <BeatLoader color={'#f2acc7'} loading={true} />
           </div>
@@ -94,26 +92,30 @@ class Product extends Component {
                 className="column is-half-desktop"
                 style={{ padding: '0 3rem 0 3rem' }}
               >
+                <p className="is-size-4 has-text-weight-bold">{product.name}</p>
+                <p className="is-size-5 has-text-weight-bold has-text-info has-text-underline">
+                  {product.price} บาท/วัน
+                </p>
                 <div>
                   <Slider
-                    asNavFor={this.state.nav2}
+                    infinite={true}
+                    arrows={false}
                     ref={slider => (this.slider1 = slider)}
+                    {...settings}
                   >
-                    {product && product.images
-                      ? this.renderImages(product, 0)
-                      : ''}
+                    {product && product.images && this.renderImages(product, 0)}
                   </Slider>
                   {product && product.images && product.images.length > 1 && (
                     <Slider
-                      asNavFor={this.state.nav1}
-                      ref={slider => (this.slider2 = slider)}
+                      {...settings}
                       slidesToShow={3}
                       swipeToSlide={true}
                       focusOnSelect={true}
+                      ref={slider => (this.slider2 = slider)}
                     >
-                      {product && product.images
-                        ? this.renderImages(product, 1)
-                        : ''}
+                      {product &&
+                        product.images &&
+                        this.renderImages(product, 1)}
                     </Slider>
                   )}
                 </div>
@@ -122,81 +124,78 @@ class Product extends Component {
                 className="column is-half-desktop"
                 style={{ padding: '0 3rem 0 3rem' }}
               >
-                <p className="has-text-weight-bold">{product.name}</p>
-                <p className="has-text-weight-bold has-text-danger">
-                  {product.price} บาท/วัน
-                </p>
-                <hr />
-                <p className="has-text-weight-bold has-text-danger">
-                  ตรวจสอบคิวว่าง
-                </p>
-                <br />
-                <p
-                  className="has-text-weight-bold"
-                  style={{ textDecoration: 'underline' }}
-                >
-                  โปรโมชั่นแนะนำ
-                </p>
-                <p>
-                  - เช่า 7 วัน ราคา{' '}
-                  <span style={{ textDecoration: 'line-through' }}>
-                    {product.price * 7 || ''}
-                  </span>{' '}
-                  - {product.price * 5 || ''} บาท
-                </p>
-                <p>
-                  - เช่า 4 วัน ราคา{' '}
-                  <span style={{ textDecoration: 'line-through' }}>
-                    {product.price * 4 || ''}
-                  </span>{' '}
-                  - {product.price * 3 || ''} บาท
-                </p>
-                <hr />
-                <div className="field">
-                  <div className="control">
-                    <p>ตั้งแต่</p>
-                    <input
-                      className="input is-danger"
-                      type="date"
-                      placeholder="ตั้งแต่"
-                    />
+                {product && product.specs && product.specs.length > 0 && (
+                  <div>
+                    <p className="title is-5 has-text-info has-text-underline">
+                      สเปค
+                    </p>
+                    <ul>
+                      {product.specs.map((spec, i) => (
+                        <li className="is-size-6 icon-w-text" key={i}>
+                          <p
+                            className="icon is-small"
+                            style={{ marginTop: '5px' }}
+                          >
+                            <i className="fas fa-minus" />
+                          </p>
+                          <p style={{ paddingLeft: '0.5rem' }}>{spec}</p>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <div className="control">
-                    <p>ถึง</p>
-                    <input
-                      className="input is-danger"
-                      type="date"
-                      placeholder="ถึง"
-                    />
-                  </div>
-                </div>
-                <a className="button is-danger">เช็คคิว | คำนวนราคา</a>
+                )}
+                {product &&
+                  product.accessories &&
+                  product.accessories.length > 0 && (
+                    <div style={{ marginTop: '1.5rem' }}>
+                      <p className="title is-5 has-text-info has-text-underline">
+                        อุปกรณ์ที่ให้ไปด้วย
+                      </p>
+                      <ul>
+                        {product.accessories.map((accessory, i) => (
+                          <li className="is-size-6 icon-w-text" key={i}>
+                            <p
+                              className="icon is-small"
+                              style={{ marginTop: '5px' }}
+                            >
+                              <i className="fas fa-minus" />
+                            </p>
+                            <p style={{ paddingLeft: '0.5rem' }}>{accessory}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
               </div>
             </div>
             <div className="box">
               <article className="media">
                 <div className="media-content">
-                  <div className="content columns is-desktop">
-                    <div className="column is-half-desktop">
-                      <p>Specifications</p>
-                      <ul>
-                        {product &&
-                          product.specs &&
-                          product.specs.map((spec, i) => (
-                            <li key={i}>{spec}</li>
-                          ))}
-                      </ul>
+                  <div className="content is-desktop">
+                    <p className="title is-size-5 has-text-info has-text-underline">
+                      ตรวจสอบคิวว่าง
+                    </p>
+                    <div className="field columns">
+                      <div className="control column">
+                        <p className="has-text-weight-bold">ตั้งแต่</p>
+                        <input
+                          className="input is-info"
+                          type="date"
+                          placeholder="ตั้งแต่"
+                        />
+                      </div>
+                      <div className="control column">
+                        <p className="has-text-weight-bold">ถึง</p>
+                        <input
+                          className="input is-info"
+                          type="date"
+                          placeholder="ถึง"
+                        />
+                      </div>
                     </div>
-                    <div className="column is-half-desktop">
-                      <p>อุปกรณ์ที่ให้ไปด้วย</p>
-                      <ul>
-                        {product &&
-                          product.accessories &&
-                          product.accessories.map((accessory, i) => (
-                            <li key={i}>{accessory}</li>
-                          ))}
-                      </ul>
-                    </div>
+                    <a className="button is-info" style={{ marginTop: '1rem' }}>
+                      เช็คคิว | คำนวนราคา
+                    </a>
                   </div>
                 </div>
               </article>

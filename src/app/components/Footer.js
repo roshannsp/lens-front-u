@@ -12,13 +12,6 @@ class Footer extends Component {
           <hr />
           <div className="columns">
             <div className="column">
-              <p>โปรโมชั่น</p>
-              <br />
-              <ul>
-                <li>- เช่า 7 วัน จ่าย 5 วัน</li>
-                <br />
-                <li>- เช่า 4 วัน จ่าย 3 วัน</li>
-              </ul>
               <iframe
                 src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Flensfrontu%2F&tabs&width=340&height=214&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=245078872972696"
                 width="340"
@@ -28,27 +21,18 @@ class Footer extends Component {
                 allow="encrypted-media"
               />
             </div>
-            <div className="column">Line Contact</div>
             <div className="column">
-              <h3>ติดต่อร้าน LENSFRONTU</h3>
+              <img src="https://firebasestorage.googleapis.com/v0/b/lens-front-u-dev.appspot.com/o/images%2Fqr_line.jpg?alt=media&token=629c7679-463a-4ecb-b57e-fd063e631c2f" />
+            </div>
+            <div className="column">
               <p>
-                <span>ร้าน Lensfrontu</span>
+                LENS FRONT U เช่ากล้องเช่าเลนส์เชียงใหม่ ตำบล ช้างเผือก
+                อำเภอเมืองเชียงใหม่ เชียงใหม่ 50300
               </p>
-              <p>
-                <span>
-                  จันทร์-เสาร์ 11.30-22.00น.
-                  <br />
-                  <span style={{ textDecoration: 'underline' }}>
-                    หยุดวันอาทิตย์
-                  </span>
-                </span>
-              </p>
-              <p>
-                <span>ติดต่อสอบถามข้อมูล รายละเอียดการเช่า ข้อสงสัยต่างๆ</span>
-              </p>
-              <p>
-                <span>โทร 08x-xxx-xxxx</span>
-              </p>
+              <p>ทุกวัน 18.00-22.00</p>
+              <br />
+              <p>ติดต่อสอบถามข้อมูล รายละเอียดการเช่า ข้อสงสัยต่าง ๆ</p>
+              <p>โทร 091 858 8467</p>
             </div>
           </div>
         </div>

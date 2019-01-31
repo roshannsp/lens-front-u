@@ -3,10 +3,10 @@ import { inject, observer } from 'mobx-react'
 import PropTypes from 'prop-types'
 import { storage } from '../../lib/firebase'
 import Link from 'next/link'
-import { withRouter } from 'next/router'
 import 'lodash'
 import { BeatLoader, HashLoader } from 'react-spinners'
 import ImageLoader from 'react-load-image'
+import { getProductImage } from '../../services/product'
 
 @inject('store')
 @observer
@@ -16,87 +16,32 @@ class Products extends Component {
     this.store = this.props.store
     this.state = {
       products: [],
-      brand: undefined,
-      loading: false
-    }
-  }
-
-  componentDidUpdate = async () => {
-    const { query } = this.props.router
-    if (this.state.brand !== query.brand && this.state.loading === false) {
-      this.fetchProducts()
+      loading: true
     }
   }
 
   componentDidMount = async () => {
-    if (_.isEmpty(this.props.store.brand.brands)) {
-      await this.store.brand.get()
+    if (_.isEmpty(this.store.product.products)) {
+      await this.store.product.get()
     }
-    this.fetchProducts()
+    this.getProductImage()
   }
 
-  fetchProducts = async () => {
-    this.setState({ loading: true })
-    const brands = this.props.store.brand.brands
-    const { query } = this.props.router
-    if (query && query.brand && !_.isEmpty(brands)) {
-      this.setState({ products: [], brand: query.brand })
-      const brand = brands[query.brand]
-      if (brand.products) {
-        const products = await this.getProductImage(query.brand, brand.products)
-        this.setState({
-          products: this.state.products.concat(products),
-          loading: false
-        })
-      } else {
-        this.setState({ loading: false })
-      }
-    } else {
-      this.setState({ products: [], brand: undefined })
-      Object.keys(brands).map(async key => {
-        if (brands[key].products) {
-          const products = await this.getProductImage(key, brands[key].products)
-          this.setState({
-            products: this.state.products.concat(products),
-            loading: false
-          })
-        }
-      })
-    }
-  }
-
-  isHasImageUrl(products) {
-    if (
-      products.length > 0 &&
-      products[0].images.length > 0 &&
-      products[0].images[0].includes('firebasestorage')
-    ) {
-      return true
-    }
-    return false
-  }
-
-  async getProductImage(brand, products) {
-    if (this.isHasImageUrl(products)) {
-      return products
-    }
+  getProductImage = async () => {
+    const products = this.store.product.products
     const productPromises = products.map(async product => {
       const imagePromises = product.images.map(async image => {
-        const imageUrl = await this.getImage(brand, image)
+        let imageUrl = image
+        if (!imageUrl.includes('firebasestorage')) {
+          imageUrl = await getProductImage(image)
+        }
         return imageUrl
       })
       product.images = await Promise.all(imagePromises)
-      product.brand = brand
       return product
     })
     const newProducts = await Promise.all(productPromises)
-    return newProducts
-  }
-
-  getImage = async (brand, imageName) => {
-    const storageRef = storage.ref(`images/brands/${brand}/${imageName}`)
-    const imageUrl = await storageRef.getDownloadURL()
-    return imageUrl
+    this.setState({ products: newProducts, loading: false })
   }
 
   renderProducts(products) {
@@ -109,7 +54,7 @@ class Products extends Component {
                 <Link
                   href={{
                     pathname: '/product',
-                    query: { brand: product.brand, id: product.id }
+                    query: { id: product.id }
                   }}
                 >
                   <div>
@@ -144,11 +89,11 @@ class Products extends Component {
   }
 
   render() {
-    const brands = this.props.store.brand.brands
+    const forUpdate = this.store.product.products
     const products = this.state.products
     return (
       <main>
-        {(this.store.brand.getBrandStatus === 'LOADING' ||
+        {(this.store.product.getProductStatus === 'LOADING' ||
           this.state.loading) && (
           <div className="products-clip-loader">
             <BeatLoader color={'#f2acc7'} loading={true} />
@@ -166,4 +111,4 @@ Products.propTypes = {
   store: PropTypes.object
 }
 
-export default withRouter(Products)
+export default Products
