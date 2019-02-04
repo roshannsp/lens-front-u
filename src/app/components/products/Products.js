@@ -46,8 +46,8 @@ class Products extends Component {
 
   renderProducts(products) {
     return products.map((product, index) => (
-      <div key={index} className="column is-3">
-        <div className="box">
+      <div key={index} className="column is-3" style={{ cursor: 'pointer' }}>
+        <div>
           <article className="media">
             <div className="media-content">
               <div className="content">
@@ -88,11 +88,39 @@ class Products extends Component {
     ))
   }
 
+  renderCategory(products) {
+    const isRecommended = this.props.isRecommended
+    let tempProducts = [...products]
+    if (isRecommended) {
+      tempProducts = tempProducts.filter(product => product.isRecommended)
+      return this.renderProducts(tempProducts)
+    } else {
+      let categories = {}
+      tempProducts.map(product => {
+        const category = product.category
+        if (categories[category] === undefined) {
+          categories[category] = []
+        }
+        categories[category].push(product)
+      })
+      return Object.keys(categories).map(key => (
+        <div key={key} style={{ padding: '1rem 0' }}>
+          <h2 className="title has-text-light is-size-2 is-uppercase header-title">
+            {key}
+          </h2>
+          <div className="columns" style={{ padding: '1rem 0' }}>
+            {this.renderProducts(categories[key])}
+          </div>
+        </div>
+      ))
+    }
+  }
+
   render() {
     const forUpdate = this.store.product.products
     const products = this.state.products
     return (
-      <main>
+      <main style={{ padding: '1rem 0' }}>
         {(this.store.product.getProductStatus === 'LOADING' ||
           this.state.loading) && (
           <div className="products-clip-loader">
@@ -100,7 +128,7 @@ class Products extends Component {
           </div>
         )}
         <div className="columns is-multiline">
-          {this.renderProducts(products)}
+          {this.renderCategory(products)}
         </div>
       </main>
     )

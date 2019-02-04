@@ -114,7 +114,6 @@ class Product extends Component {
         product.amount--
       }
     })
-    console.log('product.amount', product.amount)
     if (product.amount > 0) {
       alert('ว่าง')
     } else {

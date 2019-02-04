@@ -62,7 +62,7 @@ class Header extends Component {
             </div>
           </div>
         </nav>
-        <div
+        {/* <div
           className="is-flex"
           style={{
             justifyContent: 'center',
@@ -72,7 +72,7 @@ class Header extends Component {
           }}
         >
           <img src="https://firebasestorage.googleapis.com/v0/b/lens-front-u-dev.appspot.com/o/images%2Flens-front-u-logo.jpg?alt=media" />
-        </div>
+        </div> */}
       </section>
     )
   }

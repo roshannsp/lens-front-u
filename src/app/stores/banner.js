@@ -1,22 +1,22 @@
 import { observable, action, runInAction } from 'mobx'
-import { get } from '../services/product'
+import { get } from '../services/banner'
 
-export default class Product {
-  @observable products = []
-  @observable getProductsStatus = ''
+export default class Banner {
+  @observable banners = []
+  @observable getBannersStatus = ''
 
   @action
   get = async () => {
-    this.getProductsStatus = 'LOADING'
+    this.getBannersStatus = 'LOADING'
     try {
       const data = await get()
       runInAction(() => {
-        this.products = data.val()
-        this.getProductsStatus = 'SUCCESS'
+        this.banners = data.val()
+        this.getBannersStatus = 'SUCCESS'
       })
     } catch (error) {
       runInAction(() => {
-        this.getProductsStatus = 'FAILED'
+        this.getBannersStatus = 'FAILED'
       })
     }
   }
