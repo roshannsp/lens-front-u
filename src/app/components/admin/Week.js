@@ -32,20 +32,26 @@ class Week extends Component {
     return (
       <div className="columns is-gapless is-marginless height-20">
         <div className="column is-2 height-100">
-          {week[0].day() === 0 && (
-            <Day dateTime={dateTime} isFirstWeek={isFirstWeek} day={week[0]} />
+          {week[0].dateTime.day() === 0 && (
+            <Day
+              dateTime={dateTime}
+              isFirstWeek={isFirstWeek}
+              day={week[0]}
+              openEditQueueModal={this.props.openEditQueueModal}
+            />
           )}
         </div>
         <div className="column is-8 height-100">
           <div className="columns is-gapless height-100">
             {week.map((day, i) => {
-              if ([0, 6].indexOf(day.day()) === -1) {
+              if ([0, 6].indexOf(day.dateTime.day()) === -1) {
                 return (
                   <div key={i} className="column">
                     <Day
                       dateTime={dateTime}
                       isFirstWeek={isFirstWeek}
                       day={day}
+                      openEditQueueModal={this.props.openEditQueueModal}
                     />
                   </div>
                 )
@@ -54,11 +60,12 @@ class Week extends Component {
           </div>
         </div>
         <div className="column is-2 height-100">
-          {week[week.length - 1].day() === 6 && (
+          {week[week.length - 1].dateTime.day() === 6 && (
             <Day
               dateTime={dateTime}
               isFirstWeek={isFirstWeek}
               day={week[week.length - 1]}
+              openEditQueueModal={this.props.openEditQueueModal}
             />
           )}
         </div>

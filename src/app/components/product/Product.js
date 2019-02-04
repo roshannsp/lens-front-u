@@ -7,6 +7,7 @@ import Slider from 'react-slick'
 import { BeatLoader, HashLoader } from 'react-spinners'
 import ImageLoader from 'react-load-image'
 import { getProductImage } from '../../services/product'
+import moment from 'moment'
 
 @inject('store')
 @observer
@@ -16,8 +17,12 @@ class Product extends Component {
     this.store = this.props.store
     this.state = {
       product: {},
-      loading: true
+      loading: true,
+      startDate: '',
+      endDate: ''
     }
+    this.handleInputChange = this.handleInputChange.bind(this)
+    this.getAvailableProducts = this.getAvailableProducts.bind(this)
   }
 
   async getProductImage() {
@@ -66,6 +71,57 @@ class Product extends Component {
     this.getProductImage()
   }
 
+  handleInputChange(event) {
+    const target = event.target
+    let value = target.type === 'checkbox' ? target.checked : target.value
+    const name = target.name
+
+    if (
+      name === 'startDate' &&
+      (this.state.endDate === '' ||
+        (this.state.endDate &&
+          moment(this.state.endDate).isBefore(moment(value))))
+    ) {
+      this.setState({
+        endDate: value
+      })
+    }
+
+    if (
+      name === 'endDate' &&
+      this.state.startDate &&
+      moment(this.state.startDate).isAfter(moment(value))
+    ) {
+      this.setState({
+        startDate: ''
+      })
+    }
+
+    this.setState({
+      [name]: value
+    })
+  }
+
+  getAvailableProducts = async () => {
+    await this.store.queue.getQueuesForChecking(
+      this.state.startDate,
+      this.state.endDate
+    )
+    const queues = this.store.queue.queuesForChecking
+    const product = Object.assign({}, this.state.product)
+    queues.map(queue => {
+      if (product.id === queue.productId) {
+        product.amount--
+      }
+    })
+    console.log('product.amount', product.amount)
+    if (product.amount > 0) {
+      alert('ว่าง')
+    } else {
+      alert('ไม่ว่าง')
+    }
+  }
+
   onSlideChange(next) {
     this.slider1.slickGoTo(next)
     this.slider2.slickGoTo(next)
@@ -79,6 +135,7 @@ class Product extends Component {
     const settings = {
       beforeChange: (current, next) => this.onSlideChange(next)
     }
+    const { startDate, endDate } = this.state
     return (
       <main>
         {isLoading ? (
@@ -182,6 +239,9 @@ class Product extends Component {
                           className="input is-info"
                           type="date"
                           placeholder="ตั้งแต่"
+                          name="startDate"
+                          value={this.state.startDate}
+                          onChange={this.handleInputChange}
                         />
                       </div>
                       <div className="control column">
@@ -190,10 +250,18 @@ class Product extends Component {
                           className="input is-info"
                           type="date"
                           placeholder="ถึง"
+                          name="endDate"
+                          value={this.state.endDate}
+                          onChange={this.handleInputChange}
                         />
                       </div>
                     </div>
-                    <a className="button is-info" style={{ marginTop: '1rem' }}>
+                    <a
+                      className="button is-info"
+                      style={{ marginTop: '1rem' }}
+                      disabled={!startDate || !endDate}
+                      onClick={this.getAvailableProducts}
+                    >
                       เช็คคิว | คำนวนราคา
                     </a>
                   </div>

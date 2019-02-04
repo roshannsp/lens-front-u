@@ -15,6 +15,7 @@ $navbar-background-color: $dark;
 // @import '~bulma-calendar/dist/css/bulma-calendar.min.css';
 
 @import '~react-mfb/mfb.css';
+@import '~bulma-tooltip';
 
 html {
   height: 100%;
@@ -111,4 +112,35 @@ html {
 .card-content {
   background-color: transparent;
   padding: 1rem;
+}
+
+.round {
+  color: white;
+}
+
+.queue {
+  height: 10px;
+  margin: 5px 0;
+  width: 100%;
+  display: block;
+}
+
+.start-date {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  margin-left: 10px !important;
+
+  &.end-date {
+    width: 87% !important;
+  }
+}
+
+.end-date {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  width: 94% !important;
+}
+
+.is-disabled {
+  background-color: darkgray;
 }

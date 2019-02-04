@@ -2,19 +2,9 @@ import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 import moment from 'moment'
 
-const initialState = {
-  name: '',
-  tel: '',
-  note: '',
-  startDate: '',
-  endDate: '',
-  productId: '',
-  products: []
-}
-
 @inject('store')
 @observer
-class AddQueueModal extends Component {
+class EditQueueModal extends Component {
   constructor(props) {
     super(props)
     this.store = this.props.store
@@ -27,13 +17,9 @@ class AddQueueModal extends Component {
       productId: '',
       products: []
     }
-    this.submitForm = this.submitForm.bind(this)
+    this.editQueue = this.editQueue.bind(this)
+    this.deleteQueue = this.deleteQueue.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
-    this.closeModal = this.closeModal.bind(this)
-  }
-
-  componentDidMount() {
-    this.setState(initialState)
   }
 
   handleInputChange(event) {
@@ -93,34 +79,43 @@ class AddQueueModal extends Component {
     this.setState({ products })
   }
 
-  submitForm() {
-    const { name, tel, startDate, endDate, productId } = this.state
+  editQueue() {
+    const oldQueue = this.props.queue
+    const queue = {
+      name: this.state.name || oldQueue.name,
+      tel: this.state.tel || oldQueue.tel,
+      note: this.state.note || oldQueue.note,
+      startDate: this.state.startDate || oldQueue.startDate,
+      endDate: this.state.endDate || oldQueue.endDate,
+      productId: this.state.productId || oldQueue.productId
+    }
+    const { name, tel, startDate, endDate, productId } = queue
     if (name && tel && startDate && endDate && productId) {
-      this.props.submitForm(this.state)
-      this.setState({
-        initialState
-      })
+      if (confirm('แก้ไข?')) {
+        this.props.editQueue(oldQueue, queue)
+      }
     } else {
       alert('กรุณาระบุข้อมูลสำคัญให้ครบ')
     }
   }
 
-  closeModal() {
-    this.setState(initialState)
-    this.props.closeModal()
+  deleteQueue() {
+    if (confirm('ลบ?')) {
+      this.props.deleteQueue(this.props.queue)
+    }
   }
 
   render() {
     const products = this.state.products
-    const dateTime = this.props.dateTime
+    const queue = this.props.queue
     let isActive = this.props.isActive && 'is-active'
     return (
       <div className={'modal ' + isActive}>
         <div className="modal-background" />
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">เพิ่มคิว</p>
-            <button className="delete" onClick={this.closeModal} />
+            <p className="modal-card-title">แก้ไขคิว</p>
+            <button className="delete" onClick={this.props.closeModal} />
           </header>
           <section className="modal-card-body">
             <div className="field">
@@ -130,7 +125,7 @@ class AddQueueModal extends Component {
                   className="input"
                   type="text"
                   name="name"
-                  value={this.state.name}
+                  value={this.state.name || (queue && queue.name) || ''}
                   onChange={this.handleInputChange}
                 />
                 <span className="icon is-small is-left">
@@ -145,7 +140,7 @@ class AddQueueModal extends Component {
                   className="input"
                   type="tel"
                   name="tel"
-                  value={this.state.tel}
+                  value={this.state.tel || (queue && queue.tel) || ''}
                   onChange={this.handleInputChange}
                   minLength={10}
                   maxLength={10}
@@ -161,7 +156,7 @@ class AddQueueModal extends Component {
                 <textarea
                   className="textarea"
                   name="note"
-                  value={this.state.note}
+                  value={this.state.note || (queue && queue.note) || ''}
                   onChange={this.handleInputChange}
                 />
               </div>
@@ -181,7 +176,11 @@ class AddQueueModal extends Component {
                           type="date"
                           placeholder="ตั้งแต่"
                           name="startDate"
-                          value={this.state.startDate}
+                          value={
+                            this.state.startDate ||
+                            (queue && queue.startDate) ||
+                            ''
+                          }
                           onChange={this.handleInputChange}
                           required
                         />
@@ -193,7 +192,9 @@ class AddQueueModal extends Component {
                           type="date"
                           placeholder="ถึง"
                           name="endDate"
-                          value={this.state.endDate}
+                          value={
+                            this.state.endDate || (queue && queue.endDate) || ''
+                          }
                           onChange={this.handleInputChange}
                           required
                         />
@@ -206,9 +207,12 @@ class AddQueueModal extends Component {
                           <select
                             style={{ width: '100%' }}
                             name="productId"
-                            value={this.state.productId}
+                            value={
+                              this.state.productId ||
+                              (queue && queue.productId) ||
+                              ''
+                            }
                             onChange={this.handleInputChange}
-                            required
                           >
                             <option style={{ width: '100%' }}>เลือก</option>
                             {products &&
@@ -230,10 +234,13 @@ class AddQueueModal extends Component {
             </div>
           </section>
           <footer className="modal-card-foot">
-            <button className="button is-success" onClick={this.submitForm}>
-              บันทึก
+            <button className="button is-success" onClick={this.editQueue}>
+              แก้ไข
             </button>
-            <button className="button" onClick={this.closeModal}>
+            <button className="button is-danger" onClick={this.deleteQueue}>
+              ลบ
+            </button>
+            <button className="button" onClick={this.props.closeModal}>
               ยกเลิก
             </button>
           </footer>
@@ -243,4 +250,4 @@ class AddQueueModal extends Component {
   }
 }
 
-export default AddQueueModal
+export default EditQueueModal
