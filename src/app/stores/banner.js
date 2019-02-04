@@ -20,15 +20,4 @@ export default class Banner {
       })
     }
   }
-
-  @action
-  set = async products => {
-    try {
-      runInAction(() => {
-        this.products = products
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
 }

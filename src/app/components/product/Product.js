@@ -8,6 +8,7 @@ import { BeatLoader, HashLoader } from 'react-spinners'
 import ImageLoader from 'react-load-image'
 import { getProductImage } from '../../services/product'
 import moment from 'moment'
+import MessageModal from './MessageModal'
 
 @inject('store')
 @observer
@@ -19,10 +20,16 @@ class Product extends Component {
       product: {},
       loading: true,
       startDate: '',
-      endDate: ''
+      endDate: '',
+      isMessageModalActive: false,
+      message: '',
+      subMessage: '',
+      subMessage2: ''
     }
     this.handleInputChange = this.handleInputChange.bind(this)
     this.getAvailableProducts = this.getAvailableProducts.bind(this)
+    this.closeMessageModal = this.closeMessageModal.bind(this)
+    this.openLine = this.openLine.bind(this)
   }
 
   async getProductImage() {
@@ -103,10 +110,8 @@ class Product extends Component {
   }
 
   getAvailableProducts = async () => {
-    await this.store.queue.getQueuesForChecking(
-      this.state.startDate,
-      this.state.endDate
-    )
+    const { startDate, endDate } = this.state
+    await this.store.queue.getQueuesForChecking(startDate, endDate)
     const queues = this.store.queue.queuesForChecking
     const product = Object.assign({}, this.state.product)
     queues.map(queue => {
@@ -115,15 +120,48 @@ class Product extends Component {
       }
     })
     if (product.amount > 0) {
-      alert('ว่าง')
+      const diffDay = moment(endDate).diff(moment(startDate), 'days') + 1
+      const dateFormat = 'DD/MM/YYYY'
+      const subMessage2 = `ตั้งแต่ ${moment(startDate).format(
+        dateFormat
+      )} ถึง ${moment(endDate).format(
+        dateFormat
+      )} รวม ${diffDay} วัน ${diffDay * product.price} บาท`
+      this.setState({
+        message: `คิวที่คุณเลือก ว่าง`,
+        subMessage: product.name,
+        subMessage2,
+        isMessageModalActive: true
+      })
     } else {
-      alert('ไม่ว่าง')
+      this.setState({
+        message: 'คิวที่คุณเลือก ไม่ว่าง',
+        isMessageModalActive: true
+      })
     }
   }
 
   onSlideChange(next) {
     this.slider1.slickGoTo(next)
     this.slider2.slickGoTo(next)
+  }
+
+  openMessageModal() {
+    this.setState({ isMessageModalActive: true })
+  }
+
+  closeMessageModal() {
+    this.setState({ isMessageModalActive: false })
+  }
+
+  openLine() {
+    const { product, startDate, endDate } = this.state
+    const dateFormat = 'DD/MM/YYYY'
+    let message = `สนใจเช่า ${product.name} ตั้งแต่ ${moment(startDate).format(
+      dateFormat
+    )} ถึง ${moment(endDate).format(dateFormat)}`
+    message = encodeURIComponent(message)
+    window.location.href = `line://oaMessage/tong.ta.hatsanai/?${message}`
   }
 
   render() {
@@ -134,7 +172,14 @@ class Product extends Component {
     const settings = {
       beforeChange: (current, next) => this.onSlideChange(next)
     }
-    const { startDate, endDate } = this.state
+    const {
+      startDate,
+      endDate,
+      message,
+      subMessage,
+      subMessage2,
+      isMessageModalActive
+    } = this.state
     return (
       <main>
         {isLoading ? (
@@ -269,6 +314,14 @@ class Product extends Component {
             </div>
           </div>
         )}
+        <MessageModal
+          isActive={isMessageModalActive}
+          closeModal={this.closeMessageModal}
+          openLine={this.openLine}
+          message={message}
+          subMessage={subMessage}
+          subMessage2={subMessage2}
+        />
       </main>
     )
   }
