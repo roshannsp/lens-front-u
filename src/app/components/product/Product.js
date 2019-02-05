@@ -161,7 +161,8 @@ class Product extends Component {
       dateFormat
     )} ถึง ${moment(endDate).format(dateFormat)}`
     message = encodeURIComponent(message)
-    window.location.href = `line://oaMessage/tong.ta.hatsanai/?${message}`
+    // window.location.href = `line://oaMessage/@lensfrontu/?${message}`
+    // window.location.href = `https://line.me/R/ti/p/lensfrontu`
   }
 
   render() {

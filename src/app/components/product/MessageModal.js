@@ -22,11 +22,11 @@ class MessageModal extends Component {
             <p className="has-text-dark">{subMessage2}</p>
           </section>
           <footer className="modal-card-foot">
-            <button className="button is-success" onClick={this.props.openLine}>
+            {/* <button className="button is-success" onClick={this.props.openLine}>
               ติดต่อเช่า
-            </button>
+            </button> */}
             <button className="button" onClick={this.props.closeModal}>
-              ยกเลิก
+              ปิด
             </button>
           </footer>
         </div>

@@ -40,24 +40,36 @@ class Header extends Component {
             </a>
           </div>
           <div className={isActive('navbar-menu')}>
-            <div className="navbar-start container flex-center">
+            <div className="navbar-start container menu-bar">
               <Link href="/">
-                <a className="navbar-item">หน้าแรก</a>
+                <a className="navbar-item has-text-light has-background-dark">
+                  หน้าแรก
+                </a>
               </Link>
               <Link href="/products">
-                <a className="navbar-item">รายการทั้งหมด</a>
+                <a className="navbar-item has-text-light has-background-dark">
+                  รายการทั้งหมด
+                </a>
               </Link>
               <Link href="/instruction">
-                <a className="navbar-item">ขั้นตอนการเช่า / เงื่อนไข</a>
+                <a className="navbar-item has-text-light has-background-dark">
+                  ขั้นตอนการเช่า / เงื่อนไข
+                </a>
               </Link>
               <Link href="/promotion">
-                <a className="navbar-item">โปรโมชั่น</a>
+                <a className="navbar-item has-text-light has-background-dark">
+                  โปรโมชั่น
+                </a>
               </Link>
               <Link href="/review">
-                <a className="navbar-item">รีวิว</a>
+                <a className="navbar-item has-text-light has-background-dark">
+                  รีวิว
+                </a>
               </Link>
               <Link href="/contact">
-                <a className="navbar-item">ติดต่อ</a>
+                <a className="navbar-item has-text-light has-background-dark">
+                  ติดต่อ
+                </a>
               </Link>
             </div>
           </div>
