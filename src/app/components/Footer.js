@@ -22,7 +22,7 @@ class Footer extends Component {
                 />
               </div>
               <div className="column">
-                <img src="https://firebasestorage.googleapis.com/v0/b/lens-front-u-dev.appspot.com/o/images%2Fqr_line.jpg?alt=media&token=629c7679-463a-4ecb-b57e-fd063e631c2f" />
+                <img src="https://firebasestorage.googleapis.com/v0/b/lensfrontu-prod.appspot.com/o/images%2Fqr_line_lensfrontu.jpg?alt=media&token=637329d9-1e62-463f-b6c8-00904b67c999" />
               </div>
               <div className="column">
                 <h5 className="is-size-5">LENS FRONT U</h5>

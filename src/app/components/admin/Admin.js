@@ -7,6 +7,7 @@ import Topbar from './Topbar'
 import AddQueueModal from './AddQueueModal'
 import MessageModal from './MessageModal'
 import EditQueueModal from './EditQueueModal'
+import Login from './Login'
 
 @inject('store')
 @observer
@@ -20,7 +21,8 @@ class Admin extends Component {
       isMessageModalActive: false,
       isEditQueueModalActive: false,
       messageMessageModal: '',
-      editingQueue: null
+      editingQueue: null,
+      isLogedIn: false
     }
     this.previousMonth = this.previousMonth.bind(this)
     this.todayMonth = this.todayMonth.bind(this)
@@ -40,6 +42,7 @@ class Admin extends Component {
     if (event.keyCode === 27) {
       this.closeAddQueueModal()
       this.closeMessageModal()
+      this.closeEditQueueModal()
     }
   }
 
@@ -194,34 +197,41 @@ class Admin extends Component {
     const dateTime = this.state.dateTime
     const addQueueStatus = this.store.queue.addQueueStatus
     const isMessageModalActive = addQueueStatus && addQueueStatus !== 'LOADING'
+    const isLogedIn = this.store.user.isLogedIn
     return (
       <main className="height-100">
-        <Topbar
-          dateTime={dateTime}
-          previousMonth={this.previousMonth}
-          todayMonth={this.todayMonth}
-          nextMonth={this.nextMonth}
-          openAddQueueModal={this.openAddQueueModal}
-          openEditQueueModal={this.openEditQueueModal}
-        />
-        <AddQueueModal
-          isActive={this.state.isAddQueueModalActive}
-          closeModal={this.closeAddQueueModal}
-          submitForm={this.submitQueue}
-        />
-        <MessageModal
-          isActive={isMessageModalActive}
-          closeModal={this.closeMessageModal}
-          message={addQueueStatus}
-        />
-        <EditQueueModal
-          isActive={this.state.isEditQueueModalActive}
-          closeModal={this.closeEditQueueModal}
-          queue={this.state.editingQueue}
-          editQueue={this.editQueue}
-          deleteQueue={this.deleteQueue}
-        />
-        <div className="height-100">{this.renderWeeks()}</div>
+        {!isLogedIn ? (
+          <Login />
+        ) : (
+          <div>
+            <Topbar
+              dateTime={dateTime}
+              previousMonth={this.previousMonth}
+              todayMonth={this.todayMonth}
+              nextMonth={this.nextMonth}
+              openAddQueueModal={this.openAddQueueModal}
+              openEditQueueModal={this.openEditQueueModal}
+            />
+            <AddQueueModal
+              isActive={this.state.isAddQueueModalActive}
+              closeModal={this.closeAddQueueModal}
+              submitForm={this.submitQueue}
+            />
+            <MessageModal
+              isActive={isMessageModalActive}
+              closeModal={this.closeMessageModal}
+              message={addQueueStatus}
+            />
+            <EditQueueModal
+              isActive={this.state.isEditQueueModalActive}
+              closeModal={this.closeEditQueueModal}
+              queue={this.state.editingQueue}
+              editQueue={this.editQueue}
+              deleteQueue={this.deleteQueue}
+            />
+            <div className="height-100">{this.renderWeeks()}</div>
+          </div>
+        )}
       </main>
     )
   }

@@ -1,4 +1,5 @@
 require('dotenv').config()
+const webpack = require('webpack')
 
 const withSass = require('@zeit/next-sass')
 const path = require('path')
@@ -9,15 +10,9 @@ module.exports = withCSS(
   withSass({
     webpack: config => {
       config.plugins = config.plugins || []
-
       config.plugins = [
-        ...config.plugins,
-
+        ...config.plugins
         // Read the .env file
-        new Dotenv({
-          path: path.join(__dirname, '.env'),
-          systemvars: true
-        })
       ]
 
       config.module.rules.push({
@@ -30,6 +25,8 @@ module.exports = withCSS(
           }
         }
       })
+
+      config.plugins.push(new webpack.EnvironmentPlugin(process.env))
 
       return config
     },

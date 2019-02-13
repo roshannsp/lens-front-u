@@ -5,6 +5,7 @@ import Banner from './banner'
 import Instruction from './instruction'
 import Promotion from './promotion'
 import Review from './review'
+import User from './user'
 
 export default {
   product: new Product(),
@@ -12,5 +13,6 @@ export default {
   banner: new Banner(),
   instruction: new Instruction(),
   promotion: new Promotion(),
-  review: new Review()
+  review: new Review(),
+  user: new User()
 }

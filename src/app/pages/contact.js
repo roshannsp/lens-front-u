@@ -45,7 +45,7 @@ export default () => (
         <div className="social-media-container">
           <div className="flex-center">
             <iframe
-              src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Flensfrontu%2F&tabs&width=340&height=214&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=245078872972696"
+              src="https://firebasestorage.googleapis.com/v0/b/lensfrontu-prod.appspot.com/o/images%2Flens-front-u-logo.jpg?alt=media&token=97817e8d-9138-4386-8f4e-4bac76ef9349"
               width="340"
               height="214"
               style={{ border: 'none', overflow: 'hidden', margin: '1rem' }}
@@ -56,7 +56,7 @@ export default () => (
           <div className="flex-center" style={{ flexDirection: 'column' }}>
             <img
               className="line-qr"
-              src="https://firebasestorage.googleapis.com/v0/b/lens-front-u-dev.appspot.com/o/images%2Fqr_line.jpg?alt=media&token=629c7679-463a-4ecb-b57e-fd063e631c2f"
+              src="https://firebasestorage.googleapis.com/v0/b/lensfrontu-prod.appspot.com/o/images%2Fqr_line_lensfrontu.jpg?alt=media&token=637329d9-1e62-463f-b6c8-00904b67c999"
             />
             <p className="has-text-centered">Line id: lensfrontu</p>
           </div>
