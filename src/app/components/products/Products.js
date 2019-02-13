@@ -46,7 +46,11 @@ class Products extends Component {
 
   renderProducts(products) {
     return products.map((product, index) => (
-      <div key={index} className="column is-3" style={{ cursor: 'pointer' }}>
+      <div
+        key={index}
+        className="column is-one-quarter-desktop is-half-mobile is-one-third-tablet"
+        style={{ cursor: 'pointer' }}
+      >
         <div>
           <article className="media">
             <div className="media-content">
@@ -93,7 +97,11 @@ class Products extends Component {
     let tempProducts = [...products]
     if (isRecommended) {
       tempProducts = tempProducts.filter(product => product.isRecommended)
-      return this.renderProducts(tempProducts)
+      return (
+        <div className="columns is-multiline is-mobile">
+          {this.renderProducts(tempProducts)}
+        </div>
+      )
     } else {
       let categories = {}
       tempProducts.map(product => {
@@ -108,7 +116,10 @@ class Products extends Component {
           <h2 className="title has-text-light is-size-2 is-uppercase header-title">
             {key}
           </h2>
-          <div className="columns" style={{ padding: '1rem 0' }}>
+          <div
+            className="columns is-multiline is-mobile"
+            style={{ padding: '1rem 0' }}
+          >
             {this.renderProducts(categories[key])}
           </div>
         </div>
@@ -127,9 +138,7 @@ class Products extends Component {
             <BeatLoader color={'#f2acc7'} loading={true} />
           </div>
         )}
-        <div className="columns is-multiline">
-          {this.renderCategory(products)}
-        </div>
+        <div>{this.renderCategory(products)}</div>
       </main>
     )
   }

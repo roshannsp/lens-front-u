@@ -22,14 +22,18 @@ class Product extends Component {
       startDate: '',
       endDate: '',
       isMessageModalActive: false,
-      message: '',
-      subMessage: '',
-      subMessage2: ''
+      title: '',
+      productName: '',
+      startDateMessage: '',
+      endDateMessage: '',
+      totalPriceMessage: '',
+      isProductAvailable: false
     }
     this.handleInputChange = this.handleInputChange.bind(this)
     this.getAvailableProducts = this.getAvailableProducts.bind(this)
     this.closeMessageModal = this.closeMessageModal.bind(this)
-    this.openLine = this.openLine.bind(this)
+    this.openUrlScheme = this.openUrlScheme.bind(this)
+    moment.locale('th')
   }
 
   async getProductImage() {
@@ -55,7 +59,7 @@ class Product extends Component {
     return product.images.map((image, index) => (
       <div key={index}>
         <ImageLoader src={image}>
-          <img />
+          <img style={{ maxHeight: '50vh', margin: 'auto' }} />
           <div>Error!</div>
           {type === 0 ? (
             <div className="product-hash-loader1">
@@ -111,6 +115,17 @@ class Product extends Component {
 
   getAvailableProducts = async () => {
     const { startDate, endDate } = this.state
+    const tempStartDate = moment(startDate)
+    const tempEndsDate = moment(endDate)
+    if (tempStartDate.isSame(tempEndsDate)) {
+      this.setState({
+        title: 'ผิดพลาด',
+        productName: 'ไม่สามารถเลือกวันเดียวกันได้',
+        isMessageModalActive: true,
+        isProductAvailable: false
+      })
+      return
+    }
     await this.store.queue.getQueuesForChecking(startDate, endDate)
     const queues = this.store.queue.queuesForChecking
     const product = Object.assign({}, this.state.product)
@@ -120,23 +135,31 @@ class Product extends Component {
       }
     })
     if (product.amount > 0) {
-      const diffDay = moment(endDate).diff(moment(startDate), 'days') + 1
-      const dateFormat = 'DD/MM/YYYY'
-      const subMessage2 = `ตั้งแต่ ${moment(startDate).format(
+      const diffDay = moment(endDate).diff(moment(startDate), 'days')
+      const dateFormat = 'DD MMMM YYYY'
+      const startDateMessage = `รับของวันที่ ${moment(startDate).format(
         dateFormat
-      )} ถึง ${moment(endDate).format(
+      )} `
+      const endDateMessage = `คืนของวันที่ ${moment(endDate).format(
         dateFormat
-      )} รวม ${diffDay} วัน ${diffDay * product.price} บาท`
+      )} ก่อน 22.00 น.`
+      const totalPriceMessage = `รวม ${diffDay} วัน ${diffDay *
+        product.price} บาท`
       this.setState({
-        message: `คิวที่คุณเลือก ว่าง`,
-        subMessage: product.name,
-        subMessage2,
-        isMessageModalActive: true
+        title: 'คิวที่คุณเลือก ว่าง',
+        productName: product.name,
+        startDateMessage,
+        endDateMessage,
+        totalPriceMessage,
+        isMessageModalActive: true,
+        isProductAvailable: true
       })
     } else {
       this.setState({
-        message: 'คิวที่คุณเลือก ไม่ว่าง',
-        isMessageModalActive: true
+        title: 'คิวที่คุณเลือก ไม่ว่าง',
+        productName: 'กรุณาเลือกใหม่',
+        isMessageModalActive: true,
+        isProductAvailable: false
       })
     }
   }
@@ -154,15 +177,14 @@ class Product extends Component {
     this.setState({ isMessageModalActive: false })
   }
 
-  openLine() {
-    const { product, startDate, endDate } = this.state
-    const dateFormat = 'DD/MM/YYYY'
-    let message = `สนใจเช่า ${product.name} ตั้งแต่ ${moment(startDate).format(
-      dateFormat
-    )} ถึง ${moment(endDate).format(dateFormat)}`
-    message = encodeURIComponent(message)
-    // window.location.href = `line://oaMessage/@lensfrontu/?${message}`
-    // window.location.href = `https://line.me/R/ti/p/lensfrontu`
+  openUrlScheme() {
+    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    const Android = /Android/.test(navigator.userAgent)
+    if (iOS || Android) {
+      window.location.href = 'fb-messenger://user-thread/lensfrontu'
+    } else {
+      window.location.href = 'https://www.facebook.com/messages/t/lensfrontu'
+    }
   }
 
   render() {
@@ -176,10 +198,13 @@ class Product extends Component {
     const {
       startDate,
       endDate,
-      message,
-      subMessage,
-      subMessage2,
-      isMessageModalActive
+      title,
+      productName,
+      startDateMessage,
+      endDateMessage,
+      totalPriceMessage,
+      isMessageModalActive,
+      isProductAvailable
     } = this.state
     return (
       <main>
@@ -279,22 +304,22 @@ class Product extends Component {
                     </p>
                     <div className="field columns">
                       <div className="control column">
-                        <p className="has-text-weight-bold">ตั้งแต่</p>
+                        <p className="has-text-weight-bold">วันที่รับของ</p>
                         <input
                           className="input is-info"
                           type="date"
-                          placeholder="ตั้งแต่"
+                          placeholder="วันที่รับของ"
                           name="startDate"
                           value={this.state.startDate}
                           onChange={this.handleInputChange}
                         />
                       </div>
                       <div className="control column">
-                        <p className="has-text-weight-bold">ถึง</p>
+                        <p className="has-text-weight-bold">วันที่คืนของ</p>
                         <input
                           className="input is-info"
                           type="date"
-                          placeholder="ถึง"
+                          placeholder="วันที่คืนของ"
                           name="endDate"
                           value={this.state.endDate}
                           onChange={this.handleInputChange}
@@ -318,10 +343,13 @@ class Product extends Component {
         <MessageModal
           isActive={isMessageModalActive}
           closeModal={this.closeMessageModal}
-          openLine={this.openLine}
-          message={message}
-          subMessage={subMessage}
-          subMessage2={subMessage2}
+          openUrlScheme={this.openUrlScheme}
+          title={title}
+          productName={productName}
+          startDateMessage={startDateMessage}
+          endDateMessage={endDateMessage}
+          totalPriceMessage={totalPriceMessage}
+          isProductAvailable={isProductAvailable}
         />
       </main>
     )

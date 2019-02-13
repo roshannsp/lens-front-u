@@ -7,24 +7,37 @@ class MessageModal extends Component {
 
   render() {
     const isActive = this.props.isActive && 'is-active'
-    const { message, subMessage, subMessage2 } = this.props
+    const {
+      title,
+      productName,
+      startDateMessage,
+      endDateMessage,
+      totalPriceMessage,
+      isProductAvailable
+    } = this.props
     return (
       <div className={'modal ' + isActive}>
         <div className="modal-background" />
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">Alert</p>
+            <p className="modal-card-title">{title}</p>
             <button className="delete" onClick={this.props.closeModal} />
           </header>
           <section className="modal-card-body">
-            <p className="has-text-dark">{message}</p>
-            <p className="has-text-dark">{subMessage}</p>
-            <p className="has-text-dark">{subMessage2}</p>
+            <p className="has-text-dark">{productName}</p>
+            <p className="has-text-dark">{startDateMessage}</p>
+            <p className="has-text-dark">{endDateMessage}</p>
+            <p className="has-text-dark">{totalPriceMessage}</p>
           </section>
           <footer className="modal-card-foot">
-            {/* <button className="button is-success" onClick={this.props.openLine}>
-              ติดต่อเช่า
-            </button> */}
+            {isProductAvailable && (
+              <button
+                className="button is-success"
+                onClick={this.props.openUrlScheme}
+              >
+                ติดต่อเช่า
+              </button>
+            )}
             <button className="button" onClick={this.props.closeModal}>
               ปิด
             </button>

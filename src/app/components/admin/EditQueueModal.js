@@ -15,11 +15,13 @@ class EditQueueModal extends Component {
       startDate: '',
       endDate: '',
       productId: '',
+      isFirstTime: true,
       products: []
     }
     this.editQueue = this.editQueue.bind(this)
     this.deleteQueue = this.deleteQueue.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
+    this.closeModal = this.closeModal.bind(this)
   }
 
   handleInputChange(event) {
@@ -63,10 +65,11 @@ class EditQueueModal extends Component {
   }
 
   getAvailableProducts = async () => {
-    await this.store.queue.getQueuesForChecking(
-      this.state.startDate,
-      this.state.endDate
-    )
+    this.state.isFirstTime = false
+    const oldQueue = this.props.queue
+    const startDate = this.state.startDate || oldQueue.startDate
+    const endDate = this.state.endDate || oldQueue.endDate
+    await this.store.queue.getQueuesForChecking(startDate, endDate)
     await this.store.product.get()
     const queues = this.store.queue.queuesForChecking
     const products = this.store.product.products
@@ -76,6 +79,10 @@ class EditQueueModal extends Component {
         product.amount--
       }
     })
+    const product = products.find(product => product.id === oldQueue.productId)
+    if (product) {
+      product.amount++
+    }
     this.setState({ products })
   }
 
@@ -105,17 +112,34 @@ class EditQueueModal extends Component {
     }
   }
 
+  closeModal() {
+    this.setState({
+      name: '',
+      tel: '',
+      note: '',
+      startDate: '',
+      endDate: '',
+      productId: '',
+      isFirstTime: true,
+      products: []
+    })
+    this.props.closeModal()
+  }
+
   render() {
     const products = this.state.products
     const queue = this.props.queue
     let isActive = this.props.isActive && 'is-active'
+    if (this.state.isFirstTime && isActive) {
+      this.getAvailableProducts()
+    }
     return (
       <div className={'modal ' + isActive}>
         <div className="modal-background" />
         <div className="modal-card">
           <header className="modal-card-head">
             <p className="modal-card-title">แก้ไขคิว</p>
-            <button className="delete" onClick={this.props.closeModal} />
+            <button className="delete" onClick={this.closeModal} />
           </header>
           <section className="modal-card-body">
             <div className="field">
@@ -240,7 +264,7 @@ class EditQueueModal extends Component {
             <button className="button is-danger" onClick={this.deleteQueue}>
               ลบ
             </button>
-            <button className="button" onClick={this.props.closeModal}>
+            <button className="button" onClick={this.closeModal}>
               ยกเลิก
             </button>
           </footer>

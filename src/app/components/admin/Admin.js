@@ -174,7 +174,6 @@ class Admin extends Component {
   }
 
   submitQueue = async queue => {
-    this.closeAddQueueModal()
     await this.store.queue.addQueue(queue)
   }
 

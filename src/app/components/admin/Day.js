@@ -24,6 +24,10 @@ class Day extends Component {
     this.renderQueue = this.renderQueue.bind(this)
   }
 
+  componentDidMount() {
+    moment.locale('th')
+  }
+
   renderQueue() {
     const day = this.props.day
     const queues = day.queues
@@ -31,6 +35,11 @@ class Day extends Component {
     const findMaximum = Object.keys(queues)
       .map(key => +key)
       .sort((a, b) => b - a)
+
+    let isShowTooltip = ''
+    if (typeof window !== 'undefined') {
+      isShowTooltip = window && window.innerWidth > 768 ? 'tooltip' : ''
+    }
     if (findMaximum) {
       const maximum = findMaximum[0]
       for (let i = 0; i <= maximum; i++) {
@@ -46,7 +55,9 @@ class Day extends Component {
               style={{
                 backgroundColor: queue.color
               }}
-              className={'tooltip queue ' + isStartDate + ' ' + isEndDate}
+              className={
+                'queue ' + isStartDate + ' ' + isEndDate + ' ' + isShowTooltip
+              }
               onClick={() => this.props.openEditQueueModal(queue)}
               data-tooltip={`${queue.name} ${queue.productId}`}
             />

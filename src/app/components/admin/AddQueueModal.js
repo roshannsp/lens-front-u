@@ -97,9 +97,7 @@ class AddQueueModal extends Component {
     const { name, tel, startDate, endDate, productId } = this.state
     if (name && tel && startDate && endDate && productId) {
       this.props.submitForm(this.state)
-      this.setState({
-        initialState
-      })
+      this.closeModal()
     } else {
       alert('กรุณาระบุข้อมูลสำคัญให้ครบ')
     }

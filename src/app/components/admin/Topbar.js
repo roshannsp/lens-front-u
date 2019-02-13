@@ -1,13 +1,29 @@
 import React, { Component } from 'react'
 import Head from 'next/head'
+import * as moment from 'moment'
 
 class Topbar extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      isActive: false
+    }
+    this.toggleBurger = this.toggleBurger.bind(this)
+  }
+
+  componentDidMount() {
+    moment.locale('th')
+  }
+
+  toggleBurger() {
+    this.setState({ isActive: !this.state.isActive })
   }
 
   render() {
     const dateTime = this.props.dateTime
+    const isActive = oldClass => {
+      return oldClass + (this.state.isActive ? ' is-active' : '')
+    }
     return (
       <section>
         <Head>
@@ -18,50 +34,64 @@ class Topbar extends Component {
           />
         </Head>
         <nav className="navbar">
-          <div className="navbar-menu">
-            <div className="navbar-start">
+          <div className="navbar-brand">
+            <a className="navbar-item">
               <p className="navbar-item has-text-light">
                 {dateTime.format('MMMM')}
               </p>
               <p className="navbar-item has-text-light">
                 {dateTime.format('YYYY')}
               </p>
-            </div>
+            </a>
+
+            <a
+              role="button"
+              className="navbar-burger burger"
+              className={isActive('navbar-burger burger has-text-light')}
+              onClick={this.toggleBurger}
+            >
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+            </a>
+          </div>
+          <div className={isActive('navbar-menu')}>
             <div className="navbar-end">
               <div className="navbar-item">
-                <a
-                  className="button is-success"
-                  onClick={this.props.openAddQueueModal}
-                >
-                  <span className="icon is-small">
-                    <i className="fas fa-plus" />
-                  </span>
-                </a>
-              </div>
-              <div className="navbar-item">
-                <div className="buttons has-addons">
-                  <span
-                    className="button is-danger"
-                    onClick={this.props.previousMonth}
+                <div className="buttons">
+                  <div
+                    className="button is-success"
+                    onClick={this.props.openAddQueueModal}
                   >
                     <span className="icon is-small">
-                      <i className="fas fa-chevron-left" />
+                      <i className="fas fa-plus" />
                     </span>
-                  </span>
-                  <span
-                    className="button is-danger"
-                    onClick={this.props.todayMonth}
-                  >
-                    Today
-                  </span>
-                  <span
-                    className="button is-danger"
-                    onClick={this.props.nextMonth}
-                  >
-                    <span className="icon is-small">
-                      <i className="fas fa-chevron-right" />
+                  </div>
+                  <div className="buttons has-addons is-marginless">
+                    <span
+                      className="button is-danger"
+                      onClick={this.props.previousMonth}
+                    >
+                      <span className="icon is-small">
+                        <i className="fas fa-chevron-left" />
+                      </span>
                     </span>
-                  </span>
+                    <span
+                      className="button is-danger"
+                      onClick={this.props.todayMonth}
+                    >
+                      Today
+                    </span>
+                    <span
+                      className="button is-danger"
+                      onClick={this.props.nextMonth}
+                    >
+                      <span className="icon is-small">
+                        <i className="fas fa-chevron-right" />
+                      </span>
+                    </span>
+                  </div>
+                  <span />
                 </div>
               </div>
             </div>

@@ -8,6 +8,7 @@ import Slider from 'react-slick'
 import { getBannerImage } from './../services/banner'
 import Products from './products/Products'
 import Link from 'next/link'
+import * as moment from 'moment'
 
 @inject('store')
 @observer
@@ -22,6 +23,7 @@ class App extends Component {
   }
 
   componentDidMount = async () => {
+    moment.locale('th')
     this.setState({ loading: true })
     if (
       this.store.banner &&
