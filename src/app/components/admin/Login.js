@@ -89,7 +89,10 @@ class Admin extends Component {
                       />
                     </div>
                   </div>
-                  <button className="button is-block is-info is-large is-fullwidth">
+                  <button
+                    className="button is-block is-info is-large is-fullwidth"
+                    onClick={this.login}
+                  >
                     Login
                   </button>
                 </div>
