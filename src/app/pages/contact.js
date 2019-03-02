@@ -30,22 +30,22 @@ export default () => (
           style={{ flexDirection: 'column', margin: '1rem' }}
         >
           <h5 className="is-size-5">LENS FRONT U</h5>
+          <p className="has-text-centered">เช่ากล้องเช่าเลนส์เชียงใหม่</p>
           <p className="has-text-centered">
-            เช่ากล้องเช่าเลนส์เชียงใหม่ ตำบล ช้างเผือก อำเภอเมืองเชียงใหม่
-            เชียงใหม่ 50300
+            กาดหน้ามช. ตรงข้ามป้ายมหาวิทยาลัยเชียงใหม่
           </p>
-          <p>เปิดทำการทุกวัน 18.00-22.00</p>
+          <p className="has-text-centered">เปิดทำการทุกวัน 18.00-22.00</p>
           <br />
           <p className="has-text-centered">
             ติดต่อสอบถามข้อมูล รายละเอียดการเช่า ข้อสงสัยต่าง ๆ
           </p>
-          <p>โทร 091 858 8467</p>
-          <p>หรือทาง social media ดังนี้</p>
+          <p className="has-text-centered">โทร 091 858 8467</p>
+          <p className="has-text-centered">หรือทาง social media ดังนี้</p>
         </div>
         <div className="social-media-container">
           <div className="flex-center">
             <iframe
-              src="https://firebasestorage.googleapis.com/v0/b/lensfrontu-prod.appspot.com/o/images%2Flens-front-u-logo.jpg?alt=media&token=97817e8d-9138-4386-8f4e-4bac76ef9349"
+              src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Flensfrontu%2F&tabs&width=340&height=214&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=245078872972696"
               width="340"
               height="214"
               style={{ border: 'none', overflow: 'hidden', margin: '1rem' }}

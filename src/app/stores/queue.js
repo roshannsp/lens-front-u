@@ -15,6 +15,8 @@ export default class Queue {
   @observable deleteQueueStatus = ''
   @observable queuesForChecking = []
   @observable getQueuesForCheckingStatus = ''
+  @observable checkQueueStatus = ''
+  @observable checkedQueue = []
 
   @action
   get = async dateTime => {
@@ -183,5 +185,40 @@ export default class Queue {
     runInAction(() => {
       this.addQueueStatus = ''
     })
+  }
+
+  @action
+  checkQueue = async (name, tel) => {
+    this.checkQueueStatus = 'LOADING'
+    try {
+      const thisMonthQueueData = await get(moment())
+      const nextMonthQueueData = await get(moment().add(1, 'months'))
+      runInAction(() => {
+        let thisMonthQueues = thisMonthQueueData.val()
+        thisMonthQueues = Object.keys(thisMonthQueues).map(
+          queue => thisMonthQueues[queue]
+        )
+        let nextMonthQueues = nextMonthQueueData.val()
+        let tempQueues = thisMonthQueues
+        if (nextMonthQueues) {
+          nextMonthQueues = Object.keys(nextMonthQueues).map(
+            queue => nextMonthQueues[queue]
+          )
+          tempQueues = tempQueues.concat(nextMonthQueues)
+        }
+        tempQueues = tempQueues.filter(queue => {
+          return (
+            (name && queue.name.includes(name)) ||
+            (tel && queue.tel.includes(tel))
+          )
+        })
+        this.checkedQueue = tempQueues
+        this.checkQueueStatus = 'SUCCESS'
+      })
+    } catch (error) {
+      runInAction(() => {
+        this.checkQueueStatus = 'FAILED'
+      })
+    }
   }
 }
