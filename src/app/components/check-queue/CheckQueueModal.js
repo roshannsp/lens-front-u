@@ -9,7 +9,30 @@ class CheckQueueModal extends Component {
     }
 
     this.handleInputChange = this.handleInputChange.bind(this)
+    this.enterFunction = this.enterFunction.bind(this)
     this.checkQueue = this.checkQueue.bind(this)
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.enterFunction, false)
+    this.nameInput.focus()
+  }
+
+  componentDidUpdate() {
+    if (this.props.isActive) {
+      document.addEventListener('keydown', this.enterFunction, false)
+      this.nameInput.focus()
+    }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.enterFunction, false)
+  }
+
+  enterFunction(event) {
+    if (event.keyCode === 13) {
+      this.checkQueue()
+    }
   }
 
   handleInputChange(event) {
@@ -24,6 +47,7 @@ class CheckQueueModal extends Component {
     const { name, tel } = this.state
     if (name.length >= 2 || (tel && tel.match(/\d{10}/))) {
       this.props.checkQueue(this.state.name, this.state.tel)
+      document.removeEventListener('keydown', this.enterFunction, false)
       this.setState({
         name: '',
         tel: ''
@@ -53,6 +77,9 @@ class CheckQueueModal extends Component {
                   name="name"
                   value={this.state.name}
                   onChange={this.handleInputChange}
+                  ref={input => {
+                    this.nameInput = input
+                  }}
                 />
                 <span className="icon is-small is-left">
                   <i className="fas fa-user" />
