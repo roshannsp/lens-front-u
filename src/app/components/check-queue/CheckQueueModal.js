@@ -5,7 +5,8 @@ class CheckQueueModal extends Component {
     super(props)
     this.state = {
       name: '',
-      tel: ''
+      tel: '',
+      isFirstActive: true
     }
 
     this.handleInputChange = this.handleInputChange.bind(this)
@@ -19,9 +20,10 @@ class CheckQueueModal extends Component {
   }
 
   componentDidUpdate() {
-    if (this.props.isActive) {
+    if (this.props.isActive && this.state.isFirstActive) {
       document.addEventListener('keydown', this.enterFunction, false)
       this.nameInput.focus()
+      this.setState({ isFirstActive: false })
     }
   }
 
@@ -50,11 +52,21 @@ class CheckQueueModal extends Component {
       document.removeEventListener('keydown', this.enterFunction, false)
       this.setState({
         name: '',
-        tel: ''
+        tel: '',
+        isFirstActive: true
       })
     } else {
       alert('กรุณากรอกข้อมูลอย่างใดอย่างหนึ่งให้ถูกต้อง')
     }
+  }
+
+  closeModal() {
+    this.setState({
+      name: '',
+      tel: '',
+      isFirstActive: true
+    })
+    this.props.closeModal()
   }
 
   render() {
@@ -65,7 +77,7 @@ class CheckQueueModal extends Component {
         <div className="modal-card">
           <header className="modal-card-head">
             <p className="modal-card-title">ตรวจสอบคิว</p>
-            <button className="delete" onClick={this.props.closeModal} />
+            <button className="delete" onClick={this.closeModal} />
           </header>
           <section className="modal-card-body">
             <div className="field">
@@ -108,7 +120,7 @@ class CheckQueueModal extends Component {
             <button className="button is-success" onClick={this.checkQueue}>
               ตรวจสอบ
             </button>
-            <button className="button" onClick={this.props.closeModal}>
+            <button className="button" onClick={this.closeModal}>
               ปิด
             </button>
           </footer>
