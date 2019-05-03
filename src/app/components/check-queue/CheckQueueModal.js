@@ -12,6 +12,7 @@ class CheckQueueModal extends Component {
     this.handleInputChange = this.handleInputChange.bind(this)
     this.enterFunction = this.enterFunction.bind(this)
     this.checkQueue = this.checkQueue.bind(this)
+    this.closeModal = this.closeModal.bind(this)
   }
 
   componentDidMount() {
