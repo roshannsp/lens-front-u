@@ -142,7 +142,7 @@ class Product extends Component {
       )} `
       const endDateMessage = `คืนของวันที่ ${moment(endDate).format(
         dateFormat
-      )} ก่อน 21.00 น.`
+      )}`
       const totalPriceMessage = `รวม ${diffDay} วัน ${diffDay *
         product.price} บาท`
       this.setState({
