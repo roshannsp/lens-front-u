@@ -10,7 +10,7 @@ const days = [
   'พุธ',
   'พฤหัสบดี',
   'ศุกร์',
-  'เสาร์'
+  'เสาร์',
 ]
 
 const colors = ['#E0BBE4', '#957DAD', '#D291BC', '#FEC8D8', '#FFDFD3']
@@ -33,7 +33,7 @@ class Day extends Component {
     const queues = day.queues
     let renderQueues = []
     const findMaximum = Object.keys(queues)
-      .map(key => +key)
+      .map((key) => +key)
       .sort((a, b) => b - a)
 
     let isShowTooltip = ''
@@ -53,7 +53,7 @@ class Day extends Component {
             <a
               key={i}
               style={{
-                backgroundColor: queue.color
+                backgroundColor: queue.color,
               }}
               className={
                 'queue ' + isStartDate + ' ' + isEndDate + ' ' + isShowTooltip
@@ -70,7 +70,7 @@ class Day extends Component {
                 height: '10px',
                 backgroundColor: 'transparent',
                 margin: '5px 0',
-                display: 'block'
+                display: 'block',
               }}
             />
           )
@@ -117,7 +117,7 @@ class Day extends Component {
 }
 
 Day.propTypes = {
-  store: PropTypes.object
+  store: PropTypes.object,
 }
 
 export default Day

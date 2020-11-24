@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 import PropTypes from 'prop-types'
-import { storage } from '../../lib/firebase'
 import Link from 'next/link'
 import 'lodash'
-import { BeatLoader, HashLoader } from 'react-spinners'
 import ImageLoader from 'react-load-image'
+import Loader from 'react-loader-spinner'
 import { getProductImage } from '../../services/product'
 
 @inject('store')
@@ -16,7 +15,7 @@ class Products extends Component {
     this.store = this.props.store
     this.state = {
       products: [],
-      loading: true
+      loading: true,
     }
   }
 
@@ -29,8 +28,8 @@ class Products extends Component {
 
   getProductImage = async () => {
     const products = this.store.product.products
-    const productPromises = products.map(async product => {
-      const imagePromises = product.images.map(async image => {
+    const productPromises = products.map(async (product) => {
+      const imagePromises = product.images.map(async (image) => {
         let imageUrl = image
         if (!imageUrl.includes('firebasestorage')) {
           imageUrl = await getProductImage(image)
@@ -58,7 +57,7 @@ class Products extends Component {
                 <Link
                   href={{
                     pathname: '/product',
-                    query: { id: product.id }
+                    query: { id: product.id },
                   }}
                 >
                   <div>
@@ -66,7 +65,13 @@ class Products extends Component {
                       <img />
                       <div>Error!</div>
                       <div className="products-hash-loader">
-                        <HashLoader color={'#f2acc7'} loading={true} />
+                        <Loader
+                          type="ThreeDots"
+                          color="#f5f5f5"
+                          height={100}
+                          width={100}
+                          timeout={3000} //3 secs
+                        />
                       </div>
                     </ImageLoader>
                     <p
@@ -74,7 +79,7 @@ class Products extends Component {
                       style={{
                         height: '48px',
                         overflow: 'hidden',
-                        textOverflow: 'ellipsis'
+                        textOverflow: 'ellipsis',
                       }}
                     >
                       {product.name}
@@ -96,7 +101,7 @@ class Products extends Component {
     const isRecommended = this.props.isRecommended
     let tempProducts = [...products]
     if (isRecommended) {
-      tempProducts = tempProducts.filter(product => product.isRecommended)
+      tempProducts = tempProducts.filter((product) => product.isRecommended)
       return (
         <div className="columns is-multiline is-mobile">
           {this.renderProducts(tempProducts)}
@@ -104,14 +109,14 @@ class Products extends Component {
       )
     } else {
       let categories = {}
-      tempProducts.map(product => {
+      tempProducts.map((product) => {
         const category = product.category
         if (categories[category] === undefined) {
           categories[category] = []
         }
         categories[category].push(product)
       })
-      return Object.keys(categories).map(key => (
+      return Object.keys(categories).map((key) => (
         <div key={key} style={{ padding: '1rem 0' }}>
           <h2 className="title has-text-light is-size-2 is-uppercase header-title">
             {key}
@@ -135,7 +140,13 @@ class Products extends Component {
         {(this.store.product.getProductStatus === 'LOADING' ||
           this.state.loading) && (
           <div className="products-clip-loader">
-            <BeatLoader color={'#f2acc7'} loading={true} />
+            <Loader
+              type="ThreeDots"
+              color="#f5f5f5"
+              height={100}
+              width={100}
+              timeout={3000} //3 secs
+            />
           </div>
         )}
         <div>{this.renderCategory(products)}</div>
@@ -145,7 +156,7 @@ class Products extends Component {
 }
 
 Products.propTypes = {
-  store: PropTypes.object
+  store: PropTypes.object,
 }
 
 export default Products

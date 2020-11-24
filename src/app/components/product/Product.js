@@ -4,8 +4,8 @@ import PropTypes from 'prop-types'
 import { withRouter } from 'next/router'
 import 'lodash'
 import Slider from 'react-slick'
-import { BeatLoader, HashLoader } from 'react-spinners'
 import ImageLoader from 'react-load-image'
+import Loader from 'react-loader-spinner'
 import { getProductImage } from '../../services/product'
 import moment from 'moment'
 import MessageModal from './MessageModal'
@@ -27,7 +27,7 @@ class Product extends Component {
       startDateMessage: '',
       endDateMessage: '',
       totalPriceMessage: '',
-      isProductAvailable: false
+      isProductAvailable: false,
     }
     this.handleInputChange = this.handleInputChange.bind(this)
     this.getAvailableProducts = this.getAvailableProducts.bind(this)
@@ -39,12 +39,12 @@ class Product extends Component {
   async getProductImage() {
     const { query } = this.props.router
     const products = this.store.product.products
-    const product = products.find(product => product.id === query.id)
+    const product = products.find((product) => product.id === query.id)
     if (!product) {
       this.setState({ loading: false })
       return false
     }
-    const imagePromises = product.images.map(async image => {
+    const imagePromises = product.images.map(async (image) => {
       let imageUrl = image
       if (!imageUrl.includes('firebasestorage')) {
         imageUrl = await getProductImage(image)
@@ -63,11 +63,23 @@ class Product extends Component {
           <div>Error!</div>
           {type === 0 ? (
             <div className="product-hash-loader1">
-              <HashLoader color={'#f2acc7'} loading={true} />
+              <Loader
+                type="ThreeDots"
+                color="#f5f5f5"
+                height={100}
+                width={100}
+                timeout={3000} //3 secs
+              />
             </div>
           ) : (
             <div className="product-hash-loader2">
-              <HashLoader color={'#f2acc7'} loading={true} />
+              <Loader
+                type="ThreeDots"
+                color="#f5f5f5"
+                height={100}
+                width={100}
+                timeout={3000} //3 secs
+              />
             </div>
           )}
         </ImageLoader>
@@ -94,7 +106,7 @@ class Product extends Component {
           moment(this.state.endDate).isBefore(moment(value))))
     ) {
       this.setState({
-        endDate: value
+        endDate: value,
       })
     }
 
@@ -104,12 +116,12 @@ class Product extends Component {
       moment(this.state.startDate).isAfter(moment(value))
     ) {
       this.setState({
-        startDate: ''
+        startDate: '',
       })
     }
 
     this.setState({
-      [name]: value
+      [name]: value,
     })
   }
 
@@ -122,14 +134,14 @@ class Product extends Component {
         title: 'ผิดพลาด',
         productName: 'ไม่สามารถเลือกวันเดียวกันได้',
         isMessageModalActive: true,
-        isProductAvailable: false
+        isProductAvailable: false,
       })
       return
     }
     await this.store.queue.getQueuesForChecking(startDate, endDate)
     const queues = this.store.queue.queuesForChecking
     const product = Object.assign({}, this.state.product)
-    queues.map(queue => {
+    queues.map((queue) => {
       if (product.id === queue.productId) {
         product.amount--
       }
@@ -152,14 +164,14 @@ class Product extends Component {
         endDateMessage,
         totalPriceMessage,
         isMessageModalActive: true,
-        isProductAvailable: true
+        isProductAvailable: true,
       })
     } else {
       this.setState({
         title: 'คิวที่คุณเลือก ไม่ว่าง',
         productName: 'กรุณาเลือกใหม่',
         isMessageModalActive: true,
-        isProductAvailable: false
+        isProductAvailable: false,
       })
     }
   }
@@ -193,7 +205,7 @@ class Product extends Component {
     const isLoading =
       this.store.product.getProductStatus === 'LOADING' || this.state.loading
     const settings = {
-      beforeChange: (current, next) => this.onSlideChange(next)
+      beforeChange: (current, next) => this.onSlideChange(next),
     }
     const {
       startDate,
@@ -204,13 +216,19 @@ class Product extends Component {
       endDateMessage,
       totalPriceMessage,
       isMessageModalActive,
-      isProductAvailable
+      isProductAvailable,
     } = this.state
     return (
       <main>
         {isLoading ? (
           <div className="product-clip-loader">
-            <BeatLoader color={'#f2acc7'} loading={true} />
+            <Loader
+              type="ThreeDots"
+              color="#f5f5f5"
+              height={100}
+              width={100}
+              timeout={3000} //3 secs
+            />
           </div>
         ) : (
           <div>
@@ -227,7 +245,7 @@ class Product extends Component {
                   <Slider
                     infinite={true}
                     arrows={false}
-                    ref={slider => (this.slider1 = slider)}
+                    ref={(slider) => (this.slider1 = slider)}
                     {...settings}
                   >
                     {product && product.images && this.renderImages(product, 0)}
@@ -238,7 +256,7 @@ class Product extends Component {
                       slidesToShow={3}
                       swipeToSlide={true}
                       focusOnSelect={true}
-                      ref={slider => (this.slider2 = slider)}
+                      ref={(slider) => (this.slider2 = slider)}
                     >
                       {product &&
                         product.images &&
@@ -357,7 +375,7 @@ class Product extends Component {
 }
 
 Product.propTypes = {
-  store: PropTypes.object
+  store: PropTypes.object,
 }
 
 export default withRouter(Product)

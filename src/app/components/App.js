@@ -7,8 +7,8 @@ import 'lodash'
 import Slider from 'react-slick'
 import { getBannerImage } from './../services/banner'
 import Products from './products/Products'
-import Link from 'next/link'
 import * as moment from 'moment'
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
 
 @inject('store')
 @observer
@@ -17,7 +17,7 @@ class App extends Component {
     super(props)
     this.state = {
       banners: [],
-      loading: false
+      loading: false,
     }
     this.store = this.props.store
   }
@@ -41,7 +41,7 @@ class App extends Component {
       this.setState({ loading: false })
       return false
     }
-    const imagePromises = banners.map(async banner => {
+    const imagePromises = banners.map(async (banner) => {
       if (!banner.imageUrl) {
         banner.imageUrl = await getBannerImage(banner.imageName)
       }
@@ -64,7 +64,7 @@ class App extends Component {
       slidesToShow: 1,
       slidesToScroll: 1,
       swipeToSlide: true,
-      cssEase: 'linear'
+      cssEase: 'linear',
     }
     return (
       <main>
@@ -101,7 +101,7 @@ class App extends Component {
 }
 
 App.propTypes = {
-  store: PropTypes.object
+  store: PropTypes.object,
 }
 
 export default App

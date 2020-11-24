@@ -1,8 +1,36 @@
 import React, { Component } from 'react'
+import { getQRCodeImage } from '../services/qrcode'
+import { inject, observer } from 'mobx-react'
+import Loader from 'react-loader-spinner'
 
+@inject('store')
+@observer
 class Footer extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      qrCodeImageUrl: '',
+      loading: false,
+    }
+    this.store = this.props.store
+  }
+
+  componentDidMount = async () => {
+    this.setState({ loading: true })
+    if (this.store.qrcode) {
+      await this.store.qrcode.get()
+    }
+    this.getQRCodeImageUrl()
+  }
+
+  async getQRCodeImageUrl() {
+    let qrcode = this.store.qrcode.qrcode
+    if (!qrcode || !qrcode.imageName) {
+      this.setState({ loading: false })
+      return false
+    }
+    const qrCodeImageUrl = await getQRCodeImage(qrcode.imageName)
+    this.setState({ qrCodeImageUrl, loading: false })
   }
 
   render() {
@@ -22,7 +50,17 @@ class Footer extends Component {
                 />
               </div>
               <div className="column">
-                <img src="https://firebasestorage.googleapis.com/v0/b/lensfrontu-prod.appspot.com/o/images%2Fqr_line_lensfrontu.jpg?alt=media&token=637329d9-1e62-463f-b6c8-00904b67c999" />
+                {this.state.loading ? (
+                  <Loader
+                    type="ThreeDots"
+                    color="#f5f5f5"
+                    height={100}
+                    width={100}
+                    timeout={3000} //3 secs
+                  />
+                ) : this.state.qrCodeImageUrl ? (
+                  <img src={this.state.qrCodeImageUrl} />
+                ) : null}
               </div>
               <div className="column">
                 <h5 className="is-size-5">LENS FRONT U</h5>

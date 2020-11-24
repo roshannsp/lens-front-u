@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 import PropTypes from 'prop-types'
 import 'lodash'
-import { BeatLoader } from 'react-spinners'
+import Loader from 'react-loader-spinner'
 
 @inject('store')
 @observer
@@ -12,7 +12,7 @@ class Instructions extends Component {
     this.store = this.props.store
     this.state = {
       instructions: [],
-      loading: true
+      loading: true,
     }
   }
 
@@ -35,7 +35,7 @@ class Instructions extends Component {
           style={{
             border: 'none',
             overflow: 'hidden',
-            backgroundColor: 'white'
+            backgroundColor: 'white',
           }}
           scrolling="no"
           frameBorder="0"
@@ -51,7 +51,13 @@ class Instructions extends Component {
       <main style={{ padding: '1rem 0' }}>
         {this.store.instruction.getInstructionsStatus === 'LOADING' && (
           <div className="products-clip-loader">
-            <BeatLoader color={'#f2acc7'} loading={true} />
+            <Loader
+              type="ThreeDots"
+              color="#f5f5f5"
+              height={100}
+              width={100}
+              timeout={3000} //3 secs
+            />
           </div>
         )}
         {this.renderInstructions()}
@@ -61,7 +67,7 @@ class Instructions extends Component {
 }
 
 Instructions.propTypes = {
-  store: PropTypes.object
+  store: PropTypes.object,
 }
 
 export default Instructions
